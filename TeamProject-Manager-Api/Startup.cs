@@ -35,8 +35,6 @@ namespace TeamProject_Manager_Api {
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
