@@ -9,8 +9,9 @@ namespace TeamProject_Manager_Api.dao.Entitys {
         public int Id { get; set; }
         public string CompanyName { get; set; }
         public int SizeOfComapny { get; set; }
-        public Address Address { get; set; }
-        public ICollection<Team> Teams{get; set;}
+        public int AddressId{ get; set; }
+        public virtual Address Address { get; set; }
+        public virtual ICollection<Team> Teams{get; set;}
 
         public Company() {
 
