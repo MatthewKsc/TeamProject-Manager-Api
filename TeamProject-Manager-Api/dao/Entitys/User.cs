@@ -22,10 +22,10 @@ namespace TeamProject_Manager_Api.dao.Entitys {
 
         }
 
-        public User(string firstName, string lastName, string Email, Address address, Team team) {
+        public User(string firstName, string lastName, string email, Address address, Team team) {
             this.FirstName = firstName;
             this.LastName = lastName;
-            this.Email = Email;
+            this.Email = email;
             this.Address = address;
             this.Team = team;
         }

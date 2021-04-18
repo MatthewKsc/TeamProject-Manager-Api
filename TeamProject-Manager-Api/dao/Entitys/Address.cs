@@ -16,10 +16,10 @@ namespace TeamProject_Manager_Api.dao.Entitys{
 
         }
 
-        public Address(string Country, string Street, string PostalCode) {
-            this.Country = Country;
-            this.Street = Street;
-            this.PostalCode = PostalCode;
+        public Address(string country, string street, string postalCode) {
+            this.Country = country;
+            this.Street = street;
+            this.PostalCode = postalCode;
         }
     }
 }
