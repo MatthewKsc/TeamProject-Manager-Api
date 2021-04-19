@@ -23,6 +23,8 @@ namespace TeamProject_Manager_Api.dao {
 
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
 
+            modelBuilder.ApplyConfiguration(new CompanyConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
     }
