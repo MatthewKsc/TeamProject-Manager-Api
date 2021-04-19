@@ -9,6 +9,7 @@ namespace TeamProject_Manager_Api.dao.Entitys{
 
         public int Id { get; set; }
         public string Country { get; set; }
+        public string City { get; set; }
         public string Street { get; set; }
         public string PostalCode { get; set; }
 
@@ -16,8 +17,9 @@ namespace TeamProject_Manager_Api.dao.Entitys{
 
         }
 
-        public Address(string country, string street, string postalCode) {
+        public Address(string country, string city, string street, string postalCode) {
             this.Country = country;
+            this.City = city;
             this.Street = street;
             this.PostalCode = postalCode;
         }

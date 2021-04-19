@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TeamProject_Manager_Api.dao.Configurations;
 using TeamProject_Manager_Api.dao.Entitys;
 
 namespace TeamProject_Manager_Api.dao {
@@ -20,7 +21,8 @@ namespace TeamProject_Manager_Api.dao {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
-            //implementation
+            modelBuilder.ApplyConfiguration(new AddressConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
     }
