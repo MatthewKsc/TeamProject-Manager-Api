@@ -25,6 +25,8 @@ namespace TeamProject_Manager_Api.dao {
 
             modelBuilder.ApplyConfiguration(new CompanyConfiguration());
 
+            modelBuilder.ApplyConfiguration(new TeamConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
     }

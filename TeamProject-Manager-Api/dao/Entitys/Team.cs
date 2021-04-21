@@ -8,7 +8,7 @@ namespace TeamProject_Manager_Api.dao.Entitys {
 
         public int Id { get; set; }
         public string NameOfTeam { get; set; }
-        public int CompnayId { get; set; }
+        public int CompanyId { get; set; }
         public virtual Company Company { get; set; }
         public virtual ICollection<User> TeamMembers { get; set; }
         public virtual ICollection<Project> Projects{ get; set; }

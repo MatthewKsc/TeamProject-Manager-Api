@@ -112,14 +112,13 @@ namespace TeamProject_Manager_Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompnayId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("NameOfTeam")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -193,7 +192,9 @@ namespace TeamProject_Manager_Api.Migrations
                 {
                     b.HasOne("TeamProject_Manager_Api.dao.Entitys.Company", "Company")
                         .WithMany("Teams")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
