@@ -29,7 +29,7 @@ namespace TeamProject_Manager_Api.dao {
 
             modelBuilder.ApplyConfiguration(new ProjectConfiguration());
 
-            
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
