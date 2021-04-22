@@ -2,15 +2,15 @@
 
 namespace TeamProject_Manager_Api.Migrations
 {
-    public partial class TeamTableConfiguration : Migration
+    public partial class ProjectTableConfiguration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "NameOfTeam",
-                table: "Teams",
-                type: "nvarchar(255)",
-                maxLength: 255,
+                name: "Title",
+                table: "Projects",
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "",
                 oldClrType: typeof(string),
@@ -21,14 +21,13 @@ namespace TeamProject_Manager_Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "NameOfTeam",
-                table: "Teams",
+                name: "Title",
+                table: "Projects",
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(255)",
-                oldMaxLength: 255);
-
+                oldType: "nvarchar(100)",
+                oldMaxLength: 100);
         }
     }
 }
