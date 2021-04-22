@@ -28,10 +28,18 @@ namespace TeamProject_Manager_Api {
             services.AddDbContext<ProjectManagerDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"))
             );
+
+
+
+            services.AddScoped<ProjectManagerSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ProjectManagerSeeder seeder) {
+
+            //to fill up db at ealry start of program
+            seeder.Seed();
+
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
