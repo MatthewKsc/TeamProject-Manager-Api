@@ -29,7 +29,9 @@ namespace TeamProject_Manager_Api {
                 options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"))
             );
 
-
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddScoped<ProjectManagerSeeder>();
         }
