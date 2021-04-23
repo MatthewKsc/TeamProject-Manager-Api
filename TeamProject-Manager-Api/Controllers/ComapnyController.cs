@@ -7,8 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 
-namespace TeamProject_Manager_Api.Controllers
-{
+namespace TeamProject_Manager_Api.Controllers{
 
     [ApiController] //allows automatic validaction of models
     [Route("api/companies")]
