@@ -37,7 +37,9 @@ namespace TeamProject_Manager_Api.Controllers{
 
         [HttpGet("{Id}")]
         public ActionResult GetByIt([FromRoute] int Id) {
-            return Ok(context.Companies.SingleOrDefault(c => c.Id == Id));
+            return Ok(context.Companies
+                .SingleOrDefault(c => c.Id == Id)
+            );
         }
 
         [HttpPost]
@@ -50,7 +52,8 @@ namespace TeamProject_Manager_Api.Controllers{
 
         [HttpDelete("{Id}")]
         public ActionResult DeleteById([FromRoute]int Id) {
-            var toRemove = context.Companies.SingleOrDefault(c=> c.Id == Id);
+            var toRemove = context.Companies
+                .SingleOrDefault(c=> c.Id == Id);
             context.Remove(toRemove);
             context.SaveChanges();
 
