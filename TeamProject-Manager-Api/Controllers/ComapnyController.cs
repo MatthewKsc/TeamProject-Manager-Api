@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
+using TeamProject_Manager_Api.dao.Entitys;
 
 namespace TeamProject_Manager_Api.Controllers{
 
@@ -25,10 +26,35 @@ namespace TeamProject_Manager_Api.Controllers{
             return Ok(
                 context
                     .Companies
-                    .Include(c=> c.Address)
-                    .Include(c=> c.Teams)
+                    .Include(c => c.Address)
+                    .Include(c => c.Teams)
+                        .ThenInclude(t => t.Projects)
+                    .Include(c => c.Teams)
+                        .ThenInclude(t => t.TeamMembers)
                     .ToList()
             );
+        }
+
+        [HttpGet("{Id}")]
+        public ActionResult GetByIt([FromRoute] int Id) {
+            return Ok(context.Companies.SingleOrDefault(c => c.Id == Id));
+        }
+
+        [HttpPost]
+        public ActionResult CreateCompany([FromBody] Company company) {
+            context.Companies.Add(company);
+            context.SaveChanges();
+
+            return Created($"api/comapny/{company.Id}", null);
+        }
+
+        [HttpDelete("{Id}")]
+        public ActionResult DeleteById([FromRoute]int Id) {
+            var toRemove = context.Companies.SingleOrDefault(c=> c.Id == Id);
+            context.Remove(toRemove);
+            context.SaveChanges();
+
+            return NoContent();
         }
     }
 }
