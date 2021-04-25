@@ -12,12 +12,12 @@ namespace TeamProject_Manager_Api.Controllers{
 
     [ApiController] //allows automatic validaction of models
     [Route("api/companies")]
-    public class ComapnyController : ControllerBase{
+    public class CompanyController : ControllerBase{
 
         private readonly ProjectManagerDbContext context;
 
         //for now to test
-        public ComapnyController(ProjectManagerDbContext context) {
+        public CompanyController(ProjectManagerDbContext context) {
             this.context = context;
         }
 
