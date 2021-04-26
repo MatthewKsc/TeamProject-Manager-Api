@@ -13,7 +13,7 @@ namespace TeamProject_Manager_Api.Services
 
         List<Company> GetAllComapnies();
         Company GetComapnyById(int Id);
-        int CreateCompany(Company company);
+        void CreateCompany(Company company);
         bool DeleteComapnyById(int Id);
     }
 
@@ -44,11 +44,9 @@ namespace TeamProject_Manager_Api.Services
             return company;
         }
 
-        public int CreateCompany(Company company) {
+        public void CreateCompany(Company company) {
             context.Companies.Add(company);
             context.SaveChanges();
-
-            return company.Id;
         }
 
         public bool DeleteComapnyById(int Id) {

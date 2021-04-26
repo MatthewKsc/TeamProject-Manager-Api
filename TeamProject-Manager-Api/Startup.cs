@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
+using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api {
     public class Startup {
@@ -25,6 +26,10 @@ namespace TeamProject_Manager_Api {
         public void ConfigureServices(IServiceCollection services) {
 
             services.AddControllers();
+
+            services.AddScoped<ICompanyService, CompanyService>();
+
+
             services.AddDbContext<ProjectManagerDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"))
             );
