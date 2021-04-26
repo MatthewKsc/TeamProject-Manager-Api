@@ -28,6 +28,7 @@ namespace TeamProject_Manager_Api {
             services.AddControllers();
 
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IProjectService, ProjectService>();
 
 
             services.AddDbContext<ProjectManagerDbContext>(
