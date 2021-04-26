@@ -52,9 +52,11 @@ namespace TeamProject_Manager_Api.Services
         public bool DeleteComapnyById(int Id) {
             Company company = context.Companies.SingleOrDefault(c => c.Id == Id);
 
-            if(company is null) {
+            if(company is null)
                 return false;
-            }
+
+            context.Companies.Remove(company);
+            context.SaveChanges();
 
             return true;
         }
