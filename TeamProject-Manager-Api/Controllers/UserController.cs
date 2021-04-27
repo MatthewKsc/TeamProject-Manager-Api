@@ -15,9 +15,9 @@ namespace TeamProject_Manager_Api.Controllers{
     [Route("api/{teamId}/users")]
     public class UserController : ControllerBase{
         
-        private readonly UserService service;
+        private readonly IUserService service;
 
-        public UserController(UserService service) {
+        public UserController(IUserService service) {
             this.service = service;
         }
 
@@ -36,7 +36,7 @@ namespace TeamProject_Manager_Api.Controllers{
             User user = service.GetUserById(teamId, Id);
 
             if (user is null)
-                NotFound($"There is no user with id: {Id}");
+                return NotFound($"There is no user with id: {Id}");
 
             return Ok(user);
         }
@@ -46,7 +46,7 @@ namespace TeamProject_Manager_Api.Controllers{
             service.CreateUser(user, teamId);
 
             if (user.Id == 0)
-                NotFound("Team is not valid");
+                return NotFound("Team is not valid");
 
             return Created($"api/{teamId}/teams/{user.Id}", null);
         }

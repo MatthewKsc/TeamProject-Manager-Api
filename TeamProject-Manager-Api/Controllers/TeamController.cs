@@ -8,6 +8,7 @@ using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers {
+
     [ApiController]
     [Route("api/{companyId}/teams")]
     public class TeamController : ControllerBase {
@@ -33,7 +34,7 @@ namespace TeamProject_Manager_Api.Controllers {
             Team team = service.GetTeamById(companyId, Id);
 
             if (team is null)
-                NotFound($"There is no team with id: {Id}");
+                return NotFound($"There is no team with id: {Id}");
 
             return Ok(team);
         }
@@ -43,7 +44,7 @@ namespace TeamProject_Manager_Api.Controllers {
             service.CreateTeam(team, companyId);
 
             if (team.Id == 0)
-                NotFound("Team is not valid");
+                return NotFound("Team is not valid");
 
             return Created($"api/{companyId}/teams/{team.Id}", null);
         }

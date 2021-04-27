@@ -29,6 +29,8 @@ namespace TeamProject_Manager_Api {
 
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IUserService, UserService>();
 
 
             services.AddDbContext<ProjectManagerDbContext>(
