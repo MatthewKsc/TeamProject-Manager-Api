@@ -1,55 +1,57 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers {
     [ApiController]
     [Route("api/{companyId}/teams")]
     public class TeamController : ControllerBase {
 
-        private readonly ProjectManagerDbContext context;
+        private readonly ITeamService service;
 
-        public TeamController(ProjectManagerDbContext context) {
-            this.context = context;
+        public TeamController(ITeamService service) {
+            this.service = service;
         }
 
         [HttpGet]
         public ActionResult GetAll([FromRoute]int companyId) {
-            return Ok(context.Teams
-                .Where(t => t.CompanyId == companyId)
-                .Include(t => t.TeamMembers)
-                .Include(t => t.Projects)
-                .ToList()
-             );
+            List<Team> teams = service.GetAllTeams(companyId);
+
+            if (teams.Count < 1)
+                return NotFound("There is no teams to display");
+
+            return Ok(teams);
         }
 
         [HttpGet("{Id}")]
         public ActionResult GetById([FromRoute] int companyId, [FromRoute] int Id) {
-            return Ok(context.Teams
-                .SingleOrDefault(t => t.CompanyId == companyId && t.Id == Id)
-             );
+            Team team = service.GetTeamById(companyId, Id);
+
+            if (team is null)
+                NotFound($"There is no team with id: {Id}");
+
+            return Ok(team);
         }
 
         [HttpPost]
-        public ActionResult CreatTeam([FromRoute] int companyId, [FromBody] Team team) {
-            team.CompanyId = companyId;
-            context.Teams.Add(team);
-            context.SaveChanges();
+        public ActionResult CreatTeam([FromBody] Team team, [FromRoute] int companyId) {
+            service.CreateTeam(team, companyId);
+
+            if (team.Id == 0)
+                NotFound("Team is not valid");
 
             return Created($"api/{companyId}/teams/{team.Id}", null);
         }
 
         [HttpDelete("{Id}")]
         public ActionResult DeleteById([FromRoute] int companyId, [FromRoute] int Id) {
-            var team = context.Teams.SingleOrDefault(t => t.CompanyId == companyId && t.Id == Id);
-            context.Remove(team);
-            context.SaveChanges();
+            if(!service.DeleteTeamById(companyId, Id))
+               return NotFound($"There is no team with id: {Id}");
 
             return NoContent();
         }
