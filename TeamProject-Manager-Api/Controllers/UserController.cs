@@ -7,50 +7,54 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers{
 
     [ApiController]
     [Route("api/{teamId}/users")]
     public class UserController : ControllerBase{
+        
+        private readonly UserService service;
 
-        private readonly ProjectManagerDbContext context;
-
-        public UserController(ProjectManagerDbContext context) {
-            this.context = context;
+        public UserController(UserService service) {
+            this.service = service;
         }
 
         [HttpGet]
         public ActionResult GetAll([FromRoute] int teamId) {
-            return Ok(context.Users
-                .Where(u => u.TeamId == teamId)
-                .Include(u=> u.Address)
-                .ToList()
-           );
+            List<User> users = service.GetAllUsers(teamId);
+
+            if (users.Count < 1)
+                return NotFound("There is no users to display");
+
+            return Ok(users);
         }
 
         [HttpGet("{Id}")]
         public ActionResult GetById([FromRoute] int teamId, [FromRoute] int Id) {
-            return Ok(context.Users
-                .SingleOrDefault(u => u.TeamId==teamId && u.Id == Id)
-            );
+            User user = service.GetUserById(teamId, Id);
+
+            if (user is null)
+                NotFound($"There is no user with id: {Id}");
+
+            return Ok(user);
         }
 
         [HttpPost]
-        public ActionResult CreatUser([FromRoute] int teamId, [FromBody] User user) {
-            user.TeamId = teamId;
-            context.Users.Add(user);
-            context.SaveChanges();
+        public ActionResult CreatUser([FromBody] User user, [FromRoute] int teamId) {
+            service.CreateUser(user, teamId);
+
+            if (user.Id == 0)
+                NotFound("Team is not valid");
 
             return Created($"api/{teamId}/teams/{user.Id}", null);
         }
 
         [HttpDelete("{Id}")]
         public ActionResult DeleteById([FromRoute] int teamId, [FromRoute] int Id) {
-            var user = context.Users
-                        .SingleOrDefault(u => u.TeamId == teamId && u.Id == Id);
-            context.Users.Remove(user);
-            context.SaveChanges();
+            if(!service.DeleteUserById(teamId, Id))
+                return NotFound($"There is no user with id: {Id}");
 
             return NoContent();
         }
