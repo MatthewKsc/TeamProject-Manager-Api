@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Exceptions;
 
 namespace TeamProject_Manager_Api.Services
 {
@@ -17,7 +18,7 @@ namespace TeamProject_Manager_Api.Services
 
         void CreateUser(User user, int teamId);
 
-        bool DeleteUserById(int teamId, int Id);
+        void DeleteUserById(int teamId, int Id);
 
     }
 
@@ -30,39 +31,60 @@ namespace TeamProject_Manager_Api.Services
         }
 
         public List<User> GetAllUsers(int teamId) {
+
+            ValidTeam(teamId);
+
             List<User> users = context.Users
                 .Where(u => u.TeamId == teamId)
                 .Include(u => u.Address)
                 .ToList();
 
+            if (users.Count < 1)
+                throw new NotFoundException("There is no users to display");
+
             return users;
         }
 
         public User GetUserById(int teamId, int Id) {
+
+            ValidTeam(teamId);
+
             User user = context.Users
                 .SingleOrDefault(u => u.TeamId == teamId && u.Id == Id);
+
+            if (user is null)
+                throw new NotFoundException($"There is no user with id: {Id}");
 
             return user;
         }
 
         public void CreateUser(User user, int teamId) {
+
+            ValidTeam(teamId);
+
             user.TeamId = teamId;
 
             context.Users.Add(user);
             context.SaveChanges();
         }
 
-        public bool DeleteUserById(int teamId, int Id) {
+        public void DeleteUserById(int teamId, int Id) {
+
+            ValidTeam(teamId);
+
             User user = context.Users
                 .SingleOrDefault(u => u.TeamId == teamId && u.Id == Id);
 
             if (user is null)
-                return false;
+                throw new NotFoundException($"There is no user with id: {Id}");
 
             context.Users.Remove(user);
             context.SaveChanges();
+        }
 
-            return true;
+        private void ValidTeam(int teamId) {
+            if (!context.Teams.Any(t => t.Id == teamId))
+                throw new BadRequestException($"There is no team with id {teamId}");
         }
     }
 }

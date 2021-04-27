@@ -27,6 +27,9 @@ namespace TeamProject_Manager_Api.Services{
         }
 
         public List<Project> GetAllProjects(int teamId) {
+
+            ValidTeam(teamId);
+
             List<Project> projects = context.Projects
                 .Where(p => p.OwnerTeamId == teamId)
                 .Include(t => t.UsersAssigned)
@@ -40,6 +43,9 @@ namespace TeamProject_Manager_Api.Services{
         }
 
         public Project GetProjectById(int teamId, int Id) {
+
+            ValidTeam(teamId);
+
             Project project = context
                 .Projects.SingleOrDefault(p => p.OwnerTeamId == teamId && p.Id == Id);
 
@@ -50,6 +56,9 @@ namespace TeamProject_Manager_Api.Services{
         }
 
         public void CreateProject(Project project, int teamId) {
+
+            ValidTeam(teamId);
+
             project.OwnerTeamId = teamId;
 
             context.Projects.Add(project);
@@ -57,6 +66,9 @@ namespace TeamProject_Manager_Api.Services{
         }
 
         public void DeleteProjectById(int teamId, int Id) {
+
+            ValidTeam(teamId);
+
             Project project = context
                 .Projects.SingleOrDefault(p => p.OwnerTeamId == teamId && p.Id == Id);
 
@@ -65,6 +77,11 @@ namespace TeamProject_Manager_Api.Services{
 
             context.Projects.Remove(project);
             context.SaveChanges();
-        }    
+        }
+
+        private void ValidTeam(int teamId) {
+            if (!context.Teams.Any(t => t.Id == teamId))
+                throw new BadRequestException($"There is no team with id {teamId}");
+        }
     }
 }

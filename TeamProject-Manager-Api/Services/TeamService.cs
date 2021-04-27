@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Exceptions;
 
 namespace TeamProject_Manager_Api.Services
 {
@@ -17,7 +18,7 @@ namespace TeamProject_Manager_Api.Services
 
         void CreateTeam(Team team, int companyId);
 
-        bool DeleteTeamById(int companyId, int Id);
+        void DeleteTeamById(int companyId, int Id);
     }
 
     public class TeamService : ITeamService{
@@ -29,40 +30,61 @@ namespace TeamProject_Manager_Api.Services
         }
 
         public List<Team> GetAllTeams(int companyId) {
+
+            ValidCompany(companyId);
+
             List<Team> teams = context.Teams
                 .Where(t => t.CompanyId == companyId)
                 .Include(t => t.TeamMembers)
                 .Include(t => t.Projects)
                 .ToList();
 
+            if (teams.Count < 1)
+                throw new NotFoundException("There is no teams to display");
+
             return teams;
         }
 
         public Team GetTeamById(int companyId, int Id) {
+
+            ValidCompany(companyId);
+
             Team team = context.Teams
                 .SingleOrDefault(t => t.CompanyId == companyId && t.Id == Id);
+
+            if (team is null)
+                throw new NotFoundException($"There is no team with id: {Id}");
 
             return team;
         }
 
         public void CreateTeam(Team team, int companyId) {
+
+            ValidCompany(companyId);
+
             team.CompanyId = companyId;
 
             context.Teams.Add(team);
             context.SaveChanges();
         }
 
-        public bool DeleteTeamById(int companyId, int Id) {
+        public void DeleteTeamById(int companyId, int Id) {
+
+            ValidCompany(companyId);
+
             Team team = context.Teams
                 .SingleOrDefault(t => t.CompanyId == companyId && t.Id == Id);
 
             if (team is null)
-                return false;
+                throw new NotFoundException($"There is no team with id: {Id}");
 
             context.Teams.Remove(team);
             context.SaveChanges();
+        }
 
-            return true;
+        private void ValidCompany(int companyId) {
+            if (!context.Companies.Any(c => c.Id == companyId))
+                throw new BadRequestException($"There is no company with id {companyId}");
         }
     }
 }

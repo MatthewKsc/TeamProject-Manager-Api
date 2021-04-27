@@ -23,38 +23,26 @@ namespace TeamProject_Manager_Api.Controllers{
 
         [HttpGet]
         public ActionResult GetAll([FromRoute] int teamId) {
-            List<User> users = service.GetAllUsers(teamId);
 
-            if (users.Count < 1)
-                return NotFound("There is no users to display");
-
-            return Ok(users);
+            return Ok(service.GetAllUsers(teamId));
         }
 
         [HttpGet("{Id}")]
         public ActionResult GetById([FromRoute] int teamId, [FromRoute] int Id) {
-            User user = service.GetUserById(teamId, Id);
-
-            if (user is null)
-                return NotFound($"There is no user with id: {Id}");
-
-            return Ok(user);
+            
+            return Ok(service.GetUserById(teamId, Id));
         }
 
         [HttpPost]
         public ActionResult CreatUser([FromBody] User user, [FromRoute] int teamId) {
             service.CreateUser(user, teamId);
 
-            if (user.Id == 0)
-                return NotFound("Team is not valid");
-
             return Created($"api/{teamId}/teams/{user.Id}", null);
         }
 
         [HttpDelete("{Id}")]
         public ActionResult DeleteById([FromRoute] int teamId, [FromRoute] int Id) {
-            if(!service.DeleteUserById(teamId, Id))
-                return NotFound($"There is no user with id: {Id}");
+            service.DeleteUserById(teamId, Id);
 
             return NoContent();
         }
