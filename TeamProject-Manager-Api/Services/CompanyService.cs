@@ -15,7 +15,7 @@ namespace TeamProject_Manager_Api.Services
         List<Company> GetAllComapnies();
         Company GetComapnyById(int Id);
         void CreateCompany(Company company);
-        bool DeleteComapnyById(int Id);
+        void DeleteComapnyById(int Id);
     }
 
     public class CompanyService : ICompanyService{
@@ -36,11 +36,18 @@ namespace TeamProject_Manager_Api.Services
                      .ThenInclude(t => t.TeamMembers)
                      .ToList();
 
+            if (companies.Count < 1)
+                throw new NotFoundException("There is no companies to display");
+
             return companies;
         }
 
         public Company GetComapnyById(int Id) {
-            Company company = context.Companies.SingleOrDefault(c => c.Id == Id);
+            Company company = context.Companies
+                .SingleOrDefault(c => c.Id == Id);
+
+            if (company is null)
+                throw new NotFoundException($"There is no company with id: {Id}");
 
             return company;
         }
@@ -50,16 +57,14 @@ namespace TeamProject_Manager_Api.Services
             context.SaveChanges();
         }
 
-        public bool DeleteComapnyById(int Id) {
+        public void DeleteComapnyById(int Id) {
             Company company = context.Companies.SingleOrDefault(c => c.Id == Id);
 
             if(company is null)
-                return false;
+                throw new NotFoundException($"There is no company with id: {Id}");
 
             context.Companies.Remove(company);
             context.SaveChanges();
-
-            return true;
         }
     }
 }

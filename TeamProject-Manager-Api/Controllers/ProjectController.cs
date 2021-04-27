@@ -21,38 +21,26 @@ namespace TeamProject_Manager_Api.Controllers {
 
         [HttpGet]
         public ActionResult GetAll([FromRoute] int teamId) {
-            List<Project> projects = service.GetAllProjects(teamId);
 
-            if (projects.Count < 1)
-                return NotFound("There is no projects to display");
-
-            return Ok(projects);
+            return Ok(service.GetAllProjects(teamId));
         }
 
         [HttpGet("{Id}")]
         public ActionResult GetById([FromRoute] int teamId, [FromRoute] int Id) {
-            Project project = service.GetProjectById(teamId, Id);
 
-            if (project is null)
-                return NotFound($"There is no project with id: {Id}");
-
-            return Ok(project);
+            return Ok(service.GetProjectById(teamId, Id));
         }
 
         [HttpPost]
         public ActionResult CreateProject([FromBody] Project project, [FromRoute] int teamId) {
             service.CreateProject(project, teamId);
 
-            if (project.Id == 0)
-                NotFound("Project is not valid");
-
             return Created($"api/{teamId}/projects/{project.Id}", null);
         }
 
         [HttpDelete("{Id}")]
         public ActionResult DeleteById([FromRoute] int teamId, [FromRoute] int Id) {
-            if (!service.DeleteProjectById(teamId, Id))
-                return NotFound($"There is no project with id: {Id}");
+            service.DeleteProjectById(teamId, Id);
 
             return NoContent();
         }

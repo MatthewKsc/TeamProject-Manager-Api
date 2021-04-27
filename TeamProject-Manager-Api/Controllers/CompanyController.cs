@@ -20,39 +20,27 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpGet]
-        public ActionResult GetAllComapnies() {
-            List<Company> companies = service.GetAllComapnies();
+        public ActionResult GetAllComapnies(){
 
-            if (companies.Count < 1)
-                return NotFound("There is no companies to display");
-
-            return Ok(companies);
+            return Ok(service.GetAllComapnies());
         }
 
         [HttpGet("{Id}")]
         public ActionResult GetByIt([FromRoute] int Id) {
-            Company company = service.GetComapnyById(Id);
 
-            if (company is null) 
-                return NotFound($"There is no company with id: {Id}");
-
-            return Ok(company);
+            return Ok(service.GetComapnyById(Id));
         }
 
         [HttpPost]
         public ActionResult CreateCompany([FromBody] Company company) {
             service.CreateCompany(company);
 
-            if (company.Id == 0)
-                return BadRequest("Comapny is not valid"); 
-
             return Created($"api/companies/{company.Id}", null);
         }
 
         [HttpDelete("{Id}")]
         public ActionResult DeleteById([FromRoute]int Id) {
-            if(!service.DeleteComapnyById(Id))
-                return NotFound($"There is no company with id: {Id}");
+            service.DeleteComapnyById(Id);
 
             return NoContent();
         }

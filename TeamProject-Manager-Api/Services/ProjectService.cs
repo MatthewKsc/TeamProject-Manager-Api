@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Exceptions;
 
 namespace TeamProject_Manager_Api.Services{
     public interface IProjectService {
@@ -13,7 +14,7 @@ namespace TeamProject_Manager_Api.Services{
         List<Project> GetAllProjects(int teamId);
         Project GetProjectById(int teamId, int Id);
         void CreateProject(Project project, int teamId);
-        bool DeleteProjectById(int teamId, int Id);
+        void DeleteProjectById(int teamId, int Id);
 
     }
 
@@ -26,18 +27,24 @@ namespace TeamProject_Manager_Api.Services{
         }
 
         public List<Project> GetAllProjects(int teamId) {
-            List<Project> projest = context.Projects
+            List<Project> projects = context.Projects
                 .Where(p => p.OwnerTeamId == teamId)
                 .Include(t => t.UsersAssigned)
                 .Include(t => t.OwnerTeam)
                 .ToList();
 
-            return projest;
+            if (projects.Count < 1)
+                throw new NotFoundException("There is no projects to display");
+
+            return projects;
         }
 
         public Project GetProjectById(int teamId, int Id) {
             Project project = context
                 .Projects.SingleOrDefault(p => p.OwnerTeamId == teamId && p.Id == Id);
+
+            if (project is null)
+                throw new NotFoundException($"There is no project with id: {Id}");
 
             return project;
         }
@@ -49,17 +56,15 @@ namespace TeamProject_Manager_Api.Services{
             context.SaveChanges();
         }
 
-        public bool DeleteProjectById(int teamId, int Id) {
+        public void DeleteProjectById(int teamId, int Id) {
             Project project = context
                 .Projects.SingleOrDefault(p => p.OwnerTeamId == teamId && p.Id == Id);
 
             if (project is null)
-                return false;
+                throw new NotFoundException($"There is no project with id: {Id}");
 
             context.Projects.Remove(project);
             context.SaveChanges();
-
-            return true;
         }    
     }
 }
