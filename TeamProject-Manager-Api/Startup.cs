@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
+using TeamProject_Manager_Api.Exceptions;
 using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api {
@@ -31,6 +32,7 @@ namespace TeamProject_Manager_Api {
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ErrorHandlingMiddleware>();
 
 
             services.AddDbContext<ProjectManagerDbContext>(
@@ -54,6 +56,7 @@ namespace TeamProject_Manager_Api {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -22,7 +22,7 @@ namespace TeamProject_Manager_Api.Exceptions {
             }
             catch(Exception exception) {
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsync("Server internal error")
+                await context.Response.WriteAsync($"Server internal error : {exception.Message}");
             }
         }
     }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Exceptions;
 
 namespace TeamProject_Manager_Api.Services
 {
