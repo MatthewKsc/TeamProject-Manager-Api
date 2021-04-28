@@ -27,6 +27,7 @@ namespace TeamProject_Manager_Api {
         public void ConfigureServices(IServiceCollection services) {
 
             services.AddControllers();
+            services.AddAutoMapper(this.GetType().Assembly);
 
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IProjectService, ProjectService>();
