@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
 using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers{
@@ -32,10 +32,17 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpPost]
-        public ActionResult CreateCompany([FromBody] Company company) {
-            service.CreateCompany(company);
+        public ActionResult CreateCompany([FromBody] CreatCompany companyDTO) {
+            int id = service.CreateCompany(companyDTO);
 
-            return Created($"api/companies/{company.Id}", null);
+            return Created($"api/companies/{id}", null);
+        }
+
+        [HttpPut("{Id}")]
+        public ActionResult UpdateCompany([FromBody] CreatCompany updatedComapny, [FromRoute]int Id) {
+            service.UpdateComapny(updatedComapny, Id);
+
+            return Ok();
         }
 
         [HttpDelete("{Id}")]

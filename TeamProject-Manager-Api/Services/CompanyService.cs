@@ -9,6 +9,7 @@ using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Exceptions;
 using AutoMapper;
 using TeamProject_Manager_Api.Dtos.Models;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
 
 namespace TeamProject_Manager_Api.Services
 {
@@ -16,8 +17,9 @@ namespace TeamProject_Manager_Api.Services
 
         List<CompanyDTO> GetAllComapnies();
         CompanyDTO GetComapnyById(int Id);
-        void CreateCompany(Company company);
+        int CreateCompany(CreatCompany dto);
         void DeleteComapnyById(int Id);
+        void UpdateComapny(CreatCompany updatedComapny, int Id);
     }
 
     public class CompanyService : ICompanyService{
@@ -57,8 +59,24 @@ namespace TeamProject_Manager_Api.Services
             return result;
         }
 
-        public void CreateCompany(Company company) {
+        public int CreateCompany(CreatCompany dto) {
+            Company company = mapper.Map<Company>(dto);
+
             context.Companies.Add(company);
+            context.SaveChanges();
+
+            return company.Id;
+        }
+        public void UpdateComapny(CreatCompany updatedComapny, int Id) {
+            Company company = context.Companies
+                .Include(c=> c.Address)
+                .SingleOrDefault(c => c.Id == Id);
+
+            if (company is null)
+                throw new NotFoundException($"There is no company with id: {Id}");
+
+            MapUpdatedCompany(company, updatedComapny);
+
             context.SaveChanges();
         }
 
@@ -70,6 +88,15 @@ namespace TeamProject_Manager_Api.Services
 
             context.Companies.Remove(company);
             context.SaveChanges();
+        }
+
+        private void MapUpdatedCompany(Company destination, CreatCompany source) {
+            destination.CompanyName = source.CompanyName;
+            destination.SizeOfComapny = source.SizeOfComapny;
+            destination.Address.City = source.City;
+            destination.Address.Street = source.Street;
+            destination.Address.Country = source.Country;
+            destination.Address.PostalCode = source.PostalCode;
         }
     }
 }

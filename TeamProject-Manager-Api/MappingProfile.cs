@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Dtos.Models;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
 
 namespace TeamProject_Manager_Api
 {
@@ -15,6 +16,18 @@ namespace TeamProject_Manager_Api
             CreateMap<Company, CompanyDTO>();
 
             CreateMap<Address, AddressDTO>();
+
+            CreateMap<CreatCompany, Company>()
+                .ForMember(c => c.Address,
+                    s => s.MapFrom(
+                        dto => new Address() { 
+                            Country = dto.Country, 
+                            City = dto.City, 
+                            PostalCode = dto.PostalCode, 
+                            Street = dto.Street 
+                         }));
+
+
         }
     }
 }
