@@ -14,7 +14,7 @@ namespace TeamProject_Manager_Api.Services
 {
     public interface ICompanyService {
 
-        List<Company> GetAllComapnies();
+        List<CompanyDTO> GetAllComapnies();
         CompanyDTO GetComapnyById(int Id);
         void CreateCompany(Company company);
         void DeleteComapnyById(int Id);
@@ -30,20 +30,18 @@ namespace TeamProject_Manager_Api.Services
             this.mapper = mapper;
         }
 
-        public List<Company> GetAllComapnies() {
+        public List<CompanyDTO> GetAllComapnies() {
 
-            List<Company> companies= context.Companies
+            List<Company> companies = context.Companies
                 .Include(c => c.Address)
-                .Include(c => c.Teams)
-                    .ThenInclude(t => t.Projects)
-                .Include(c => c.Teams)
-                     .ThenInclude(t => t.TeamMembers)
-                     .ToList();
+                .ToList();
 
             if (companies.Count < 1)
                 throw new NotFoundException("There is no companies to display");
 
-            return companies;
+            var result = mapper.Map<List<CompanyDTO>>(companies);
+
+            return result;
         }
 
         public CompanyDTO GetComapnyById(int Id) {
