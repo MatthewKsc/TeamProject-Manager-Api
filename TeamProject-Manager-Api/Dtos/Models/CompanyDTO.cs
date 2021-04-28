@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace TeamProject_Manager_Api.Dtos.Models
 {
     public class CompanyDTO{
-        
+        public string CompanyName { get; set; }
+        public int SizeOfComapny { get; set; }
+        public AddressDTO Address { get; set; }
     }
 }

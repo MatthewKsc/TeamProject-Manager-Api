@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Exceptions;
+using AutoMapper;
+using TeamProject_Manager_Api.Dtos.Models;
 
 namespace TeamProject_Manager_Api.Services
 {
     public interface ICompanyService {
 
         List<Company> GetAllComapnies();
-        Company GetComapnyById(int Id);
+        CompanyDTO GetComapnyById(int Id);
         void CreateCompany(Company company);
         void DeleteComapnyById(int Id);
     }
@@ -21,9 +23,11 @@ namespace TeamProject_Manager_Api.Services
     public class CompanyService : ICompanyService{
 
         private readonly ProjectManagerDbContext context;
+        private readonly IMapper mapper;
 
-        public CompanyService(ProjectManagerDbContext context) {
+        public CompanyService(ProjectManagerDbContext context, IMapper mapper) {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public List<Company> GetAllComapnies() {
@@ -42,14 +46,17 @@ namespace TeamProject_Manager_Api.Services
             return companies;
         }
 
-        public Company GetComapnyById(int Id) {
+        public CompanyDTO GetComapnyById(int Id) {
             Company company = context.Companies
+                .Include(c => c.Address)
                 .SingleOrDefault(c => c.Id == Id);
 
             if (company is null)
                 throw new NotFoundException($"There is no company with id: {Id}");
 
-            return company;
+            var result = mapper.Map<CompanyDTO>(company);
+
+            return result;
         }
 
         public void CreateCompany(Company company) {
