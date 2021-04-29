@@ -17,9 +17,9 @@ namespace TeamProject_Manager_Api.Services
 
         List<CompanyDTO> GetAllComapnies();
         CompanyDTO GetComapnyById(int Id);
-        int CreateCompany(CreatCompany dto);
+        int CreateCompany(CreateCompany dto);
         void DeleteComapnyById(int Id);
-        void UpdateComapny(CreatCompany updatedComapny, int Id);
+        void UpdateComapny(CreateCompany updatedComapny, int Id);
     }
 
     public class CompanyService : ICompanyService{
@@ -59,7 +59,7 @@ namespace TeamProject_Manager_Api.Services
             return result;
         }
 
-        public int CreateCompany(CreatCompany dto) {
+        public int CreateCompany(CreateCompany dto) {
             Company company = mapper.Map<Company>(dto);
 
             context.Companies.Add(company);
@@ -67,7 +67,7 @@ namespace TeamProject_Manager_Api.Services
 
             return company.Id;
         }
-        public void UpdateComapny(CreatCompany updatedComapny, int Id) {
+        public void UpdateComapny(CreateCompany updatedComapny, int Id) {
             Company company = context.Companies
                 .Include(c=> c.Address)
                 .SingleOrDefault(c => c.Id == Id);
@@ -90,7 +90,7 @@ namespace TeamProject_Manager_Api.Services
             context.SaveChanges();
         }
 
-        private void MapUpdatedCompany(Company destination, CreatCompany source) {
+        private void MapUpdatedCompany(Company destination, CreateCompany source) {
             destination.CompanyName = source.CompanyName;
             destination.SizeOfComapny = source.SizeOfComapny;
             destination.Address.City = source.City;

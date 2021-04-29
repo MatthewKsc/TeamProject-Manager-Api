@@ -13,11 +13,11 @@ namespace TeamProject_Manager_Api
     public class MappingProfile : Profile{
 
         public MappingProfile() {
-            CreateMap<Company, CompanyDTO>();
 
             CreateMap<Address, AddressDTO>();
 
-            CreateMap<CreatCompany, Company>()
+            CreateMap<Company, CompanyDTO>();
+            CreateMap<CreateCompany, Company>()
                 .ForMember(c => c.Address,
                     s => s.MapFrom(
                         dto => new Address() { 
@@ -30,6 +30,7 @@ namespace TeamProject_Manager_Api
             CreateMap<User, UserDTO>()
                 .ForMember(dto=> dto.Team, s=> s.MapFrom(u=> u.Team.NameOfTeam));
 
+            CreateMap<CreateProject, Project>();
             CreateMap<Project, ProjectDTO>()
                 .ForMember(dto => dto.ResponsibleTeam, s => s.MapFrom(p => p.OwnerTeam.NameOfTeam))
                 .ForMember(dto => dto.UsersAssigned, s => s.MapFrom(p => p.UserProjects.Select(up => up.User)));

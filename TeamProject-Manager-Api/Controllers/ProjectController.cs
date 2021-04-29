@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
 using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers {
@@ -32,10 +31,17 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpPost]
-        public ActionResult CreateProject([FromBody] Project project, [FromRoute] int teamId) {
-            service.CreateProject(project, teamId);
+        public ActionResult CreateProject([FromBody] CreateProject createProject, [FromRoute] int teamId) {
+            int id = service.CreateProject(createProject, teamId);
 
-            return Created($"api/{teamId}/projects/{project.Id}", null);
+            return Created($"api/{teamId}/projects/{id}", null);
+        }
+
+        [HttpPut("{Id}")]
+        public ActionResult UpdateProject([FromBody] CreateProject updatedProject, [FromRoute] int Id) {
+            service.UpdateProject(updatedProject, Id);
+
+            return Ok();
         }
 
         [HttpDelete("{Id}")]

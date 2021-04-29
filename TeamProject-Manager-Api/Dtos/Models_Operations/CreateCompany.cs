@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeamProject_Manager_Api.Dtos.Models_Operations
 {
-    public class CreatCompany{
+    public class CreateCompany{
 
         public string CompanyName { get; set; }
         public int SizeOfComapny { get; set; }

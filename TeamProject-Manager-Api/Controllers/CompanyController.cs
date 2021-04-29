@@ -32,14 +32,14 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpPost]
-        public ActionResult CreateCompany([FromBody] CreatCompany companyDTO) {
+        public ActionResult CreateCompany([FromBody] CreateCompany companyDTO) {
             int id = service.CreateCompany(companyDTO);
 
             return Created($"api/companies/{id}", null);
         }
 
         [HttpPut("{Id}")]
-        public ActionResult UpdateCompany([FromBody] CreatCompany updatedComapny, [FromRoute]int Id) {
+        public ActionResult UpdateCompany([FromBody] CreateCompany updatedComapny, [FromRoute]int Id) {
             service.UpdateComapny(updatedComapny, Id);
 
             return Ok();
