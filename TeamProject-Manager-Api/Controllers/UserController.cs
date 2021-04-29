@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
 using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers{
@@ -34,10 +35,17 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpPost]
-        public ActionResult CreatUser([FromBody] User user, [FromRoute] int teamId) {
-            service.CreateUser(user, teamId);
+        public ActionResult CreatUser([FromBody] CreateUser createUser, [FromRoute] int teamId) {
+            int id = service.CreateUser(createUser, teamId);
 
-            return Created($"api/{teamId}/teams/{user.Id}", null);
+            return Created($"api/{teamId}/teams/{id}", null);
+        }
+
+        [HttpPut("{Id}")]
+        public ActionResult UpdateUser([FromBody] CreateUser updatedUser, [FromRoute] int Id) {
+            service.UpdateUser(updatedUser, Id);
+
+            return Ok();
         }
 
         [HttpDelete("{Id}")]

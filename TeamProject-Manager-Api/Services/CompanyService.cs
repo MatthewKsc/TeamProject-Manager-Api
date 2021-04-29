@@ -90,13 +90,13 @@ namespace TeamProject_Manager_Api.Services
             context.SaveChanges();
         }
 
-        private void MapUpdatedCompany(Company destination, CreateCompany source) {
-            destination.CompanyName = source.CompanyName;
-            destination.SizeOfComapny = source.SizeOfComapny;
-            destination.Address.City = source.City;
-            destination.Address.Street = source.Street;
-            destination.Address.Country = source.Country;
-            destination.Address.PostalCode = source.PostalCode;
+        private void MapUpdatedCompany(Company company, CreateCompany createCompany) {
+            company.CompanyName = createCompany.CompanyName;
+            company.SizeOfComapny = createCompany.SizeOfComapny;
+            company.Address.City = createCompany.City;
+            company.Address.Street = createCompany.Street;
+            company.Address.Country = createCompany.Country;
+            company.Address.PostalCode = createCompany.PostalCode;
         }
     }
 }
