@@ -39,6 +39,10 @@ namespace TeamProject_Manager_Api
             CreateMap<Project, ProjectDTO>()
                 .ForMember(dto => dto.ResponsibleTeam, s => s.MapFrom(p => p.OwnerTeam.NameOfTeam))
                 .ForMember(dto => dto.UsersAssigned, s => s.MapFrom(p => p.UserProjects.Select(up => up.User)));
+
+            CreateMap<CreateTeam, Team>();
+            CreateMap<Team, TeamDTO>()
+                .ForMember(dto => dto.Users, s => s.MapFrom(t => t.TeamMembers));
         }
     }
 }
