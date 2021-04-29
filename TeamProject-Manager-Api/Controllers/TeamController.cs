@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao.Entitys;
+using TeamProject_Manager_Api.Dtos.Models;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
 using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers {
@@ -32,10 +34,17 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpPost]
-        public ActionResult CreatTeam([FromBody] Team team, [FromRoute] int companyId) {
-            service.CreateTeam(team, companyId);
+        public ActionResult CreatTeam([FromBody] CreateTeam createTeam, [FromRoute] int companyId) {
+            int id = service.CreateTeam(createTeam, companyId);
 
-            return Created($"api/{companyId}/teams/{team.Id}", null);
+            return Created($"api/{companyId}/teams/{id}", null);
+        }
+
+        [HttpPut("{Id}")]
+        public ActionResult UpdateTeam([FromBody] CreateTeam updatedTeam, [FromRoute] int Id) {
+            service.UpdateTeam(updatedTeam, Id);
+
+            return Ok();
         }
 
         [HttpDelete("{Id}")]
