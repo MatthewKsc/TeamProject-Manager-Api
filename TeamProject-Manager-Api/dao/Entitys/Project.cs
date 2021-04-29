@@ -11,7 +11,7 @@ namespace TeamProject_Manager_Api.dao.Entitys {
         public string Description { get; set; }
         public DateTime? StartOfProject { get; set; }
         public DateTime? EndOfProject { get; set; }
-        public virtual ICollection<User> UsersAssigned { get; set; }
+        public virtual ICollection<UserProject> UserProjects { get; set; }
         public int OwnerTeamId { get; set; }
         public virtual Team OwnerTeam{ get; set; }
 
@@ -19,10 +19,9 @@ namespace TeamProject_Manager_Api.dao.Entitys {
 
         }
 
-        public Project(string title, string desc, ICollection<User> users, Team team) {
+        public Project(string title, string desc, Team team) {
             this.Title = title;
             this.Description = desc;
-            this.UsersAssigned = users;
             this.OwnerTeam = team;
         }
 

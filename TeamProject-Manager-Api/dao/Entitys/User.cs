@@ -15,6 +15,7 @@ namespace TeamProject_Manager_Api.dao.Entitys {
         public virtual Address Address { get; set;}
         public int TeamId{ get; set; }
         public virtual Team Team { get; set; }
+        public virtual ICollection<UserProject> UserProjects {get;set;}
 
         //in future Role and Password for login and based on rola authorization
 

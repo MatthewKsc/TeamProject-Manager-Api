@@ -18,7 +18,7 @@ namespace TeamProject_Manager_Api.dao {
         public DbSet<Project> Projects { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<UserProject> UserProjects { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
@@ -30,6 +30,8 @@ namespace TeamProject_Manager_Api.dao {
             modelBuilder.ApplyConfiguration(new ProjectConfiguration());
 
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+
+            modelBuilder.ApplyConfiguration(new UserProjectConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

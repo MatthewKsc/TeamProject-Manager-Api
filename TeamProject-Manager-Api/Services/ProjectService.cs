@@ -32,7 +32,6 @@ namespace TeamProject_Manager_Api.Services{
 
             List<Project> projects = context.Projects
                 .Where(p => p.OwnerTeamId == teamId)
-                .Include(t => t.UsersAssigned)
                 .Include(t => t.OwnerTeam)
                 .ToList();
 

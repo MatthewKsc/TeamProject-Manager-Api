@@ -42,35 +42,46 @@ namespace TeamProject_Manager_Api {
         }
 
         private ICollection<Team> CreateTeams() {
+            var project = DefaulProcjet();
+
+            var usersNET = new List<User>() {
+                CreatUser("Kaufo", "Cheinz", project),
+                CreatUser("Serafine", "Som", project),
+            };
+
+            var usersOracle = new List<User>() {
+                CreatUser("Matt", "Shein", project),
+                CreatUser("Serain", "Alento", project)
+            };
+
             var teams = new List<Team>() {
                 new Team(){
-                    NameOfTeam="Oracle dev", 
-                    TeamMembers= new List<User>(){
-                        CreatUser("Matt", "Shein"), 
-                        CreatUser("Serain", "Alento")
-                    },
-                    Projects= DefaulProcjet()
+                    NameOfTeam="Oracle dev",
+                    TeamMembers= usersOracle,
+                    Projects= project
                 },
                 new Team(){
                     NameOfTeam=".NET dev",
-                    TeamMembers= new List<User>() {
-                        CreatUser("Kaufo", "Cheinz"),
-                        CreatUser("Serafine", "Som"),
-                    },
-                    Projects = DefaulProcjet()
+                    TeamMembers= usersNET,
+                    Projects = project
                 },
             };
+
+            var userProjectNet = UserProject.AddManyUsersToProject(usersNET, project[0]);
+            var userProjectsOracle = UserProject.AddManyUsersToProject(usersOracle, project[0]);
+            context.AddRange(userProjectNet);
+            context.AddRange(userProjectsOracle);
 
             return teams;
         }
 
-        private User CreatUser(string firstName, string lastName) {
+        private User CreatUser(string firstName, string lastName, List<Project> projects) {
             return new User() {
                 FirstName = firstName,
                 LastName = lastName,
                 Email = $"{firstName}.{lastName}@str.com",
                 Address = DefaultAddress(),
-                DateOfBirth = DateTime.Parse("1990-01-01")
+                DateOfBirth = DateTime.Parse("1990-01-01"),
             };
         }
 
