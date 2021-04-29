@@ -27,7 +27,12 @@ namespace TeamProject_Manager_Api
                             Street = dto.Street 
                          }));
 
+            CreateMap<User, UserDTO>()
+                .ForMember(dto=> dto.Team, s=> s.MapFrom(u=> u.Team.NameOfTeam));
 
+            CreateMap<Project, ProjectDTO>()
+                .ForMember(dto => dto.ResponsibleTeam, s => s.MapFrom(p => p.OwnerTeam.NameOfTeam))
+                .ForMember(dto => dto.UsersAssigned, s => s.MapFrom(p => p.UserProjects.Select(up => up.User)));
         }
     }
 }
