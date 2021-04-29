@@ -42,40 +42,41 @@ namespace TeamProject_Manager_Api {
         }
 
         private ICollection<Team> CreateTeams() {
-            var project = DefaulProcjet();
+            var projectNet = DefaulProcjet();
+            var projectOracle = DefaulProcjet();
 
             var usersNET = new List<User>() {
-                CreatUser("Kaufo", "Cheinz", project),
-                CreatUser("Serafine", "Som", project),
+                CreatUser("Kaufo", "Cheinz"),
+                CreatUser("Serafine", "Som"),
             };
 
             var usersOracle = new List<User>() {
-                CreatUser("Matt", "Shein", project),
-                CreatUser("Serain", "Alento", project)
+                CreatUser("Matt", "Shein"),
+                CreatUser("Serain", "Alento")
             };
 
             var teams = new List<Team>() {
                 new Team(){
                     NameOfTeam="Oracle dev",
                     TeamMembers= usersOracle,
-                    Projects= project
+                    Projects= projectOracle
                 },
                 new Team(){
                     NameOfTeam=".NET dev",
                     TeamMembers= usersNET,
-                    Projects = project
+                    Projects = projectNet
                 },
             };
 
-            var userProjectNet = UserProject.AddManyUsersToProject(usersNET, project[0]);
-            var userProjectsOracle = UserProject.AddManyUsersToProject(usersOracle, project[0]);
+            var userProjectNet = UserProject.AddManyUsersToProject(usersNET, projectNet[0]);
+            var userProjectsOracle = UserProject.AddManyUsersToProject(usersOracle, projectOracle[0]);
             context.AddRange(userProjectNet);
             context.AddRange(userProjectsOracle);
 
             return teams;
         }
 
-        private User CreatUser(string firstName, string lastName, List<Project> projects) {
+        private User CreatUser(string firstName, string lastName) {
             return new User() {
                 FirstName = firstName,
                 LastName = lastName,
