@@ -13,6 +13,15 @@ namespace TeamProject_Manager_Api.dao.Entitys
         public int ProjectId { get; set; }
         public Project Project { get; set; }
 
+        public UserProject() {
+
+        }
+
+        public UserProject(User user, Project project) {
+            this.User = user;
+            this.Project = project;
+        }
+
         public static List<UserProject> AddManyUsersToProject(List<User> users, Project project) {
             List<UserProject> result = new List<UserProject>();
 
