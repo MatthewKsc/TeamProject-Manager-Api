@@ -33,6 +33,8 @@ namespace TeamProject_Manager_Api {
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserProjectsService, UserProjectsService>();
+
             services.AddScoped<ErrorHandlingMiddleware>();
 
 
