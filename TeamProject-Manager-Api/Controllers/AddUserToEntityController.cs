@@ -12,9 +12,9 @@ namespace TeamProject_Manager_Api.Controllers
     [Route ("api/adduser")]
     public class AddUserToEntityController : ControllerBase{
 
-        private readonly AddUserToEntityService service;
+        private readonly IAddUserToEntityService service;
 
-        public AddUserToEntityController(AddUserToEntityService service) {
+        public AddUserToEntityController(IAddUserToEntityService service) {
             this.service = service;
         }
     }
