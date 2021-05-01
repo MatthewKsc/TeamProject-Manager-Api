@@ -14,6 +14,7 @@ namespace TeamProject_Manager_Api.Services
 
         void AddUserToProject(string userEmail, int projectId);
         void AddUserToProject(List<string> userEmail, int projectId);
+        void RemoveUserFromProject(string userEmail, int projectId);
     }
 
     public class UserProjectsService: IUserProjectsService{
@@ -60,6 +61,29 @@ namespace TeamProject_Manager_Api.Services
             List<UserProject> userProjects = UserProject.AddManyUsersToProject(users, project);
 
             context.UserProjects.AddRange(userProjects);
+            context.SaveChanges();
+        }
+
+        public void RemoveUserFromProject(string userEmail, int projectId) {
+            Project project = context.Projects
+               .SingleOrDefault(p => p.Id == projectId);
+
+            if (project is null)
+                throw new NotFoundException($"There is no such project with id: {projectId}");
+
+            User user =
+                context.Users.SingleOrDefault(u => u.Email.ToLower().Equals(userEmail.ToLower()));
+
+            if (user is null)
+                throw new NotFoundException($"There is no such user with Email: {userEmail}");
+
+            UserProject userProject = context.UserProjects
+                .SingleOrDefault(up => up.ProjectId == project.Id && up.UserId == user.Id);
+
+            if (userProject is null)
+                throw new NotFoundException("This user is not assigned to this project !");
+
+            context.UserProjects.Remove(userProject);
             context.SaveChanges();
         }
     }
