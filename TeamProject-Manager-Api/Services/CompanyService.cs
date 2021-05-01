@@ -75,8 +75,9 @@ namespace TeamProject_Manager_Api.Services
             if (company is null)
                 throw new NotFoundException($"There is no company with id: {Id}");
 
-            MapUpdatedCompany(company, updatedComapny);
+            company = mapper.Map(updatedComapny, company);
 
+            context.Update(company);
             context.SaveChanges();
         }
 
@@ -88,15 +89,6 @@ namespace TeamProject_Manager_Api.Services
 
             context.Companies.Remove(company);
             context.SaveChanges();
-        }
-
-        private void MapUpdatedCompany(Company company, CreateCompany createCompany) {
-            company.CompanyName = createCompany.CompanyName;
-            company.SizeOfComapny = createCompany.SizeOfComapny;
-            company.Address.City = createCompany.City;
-            company.Address.Street = createCompany.Street;
-            company.Address.Country = createCompany.Country;
-            company.Address.PostalCode = createCompany.PostalCode;
         }
     }
 }

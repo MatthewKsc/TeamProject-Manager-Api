@@ -80,6 +80,19 @@ namespace TeamProject_Manager_Api.Services
             return team.Id;
         }
 
+        public void UpdateTeam(CreateTeam updatedTeam, int Id) {
+            Team team = context.Teams
+                .SingleOrDefault(t => t.Id == Id);
+
+            if (team is null)
+                throw new NotFoundException($"There is no team with id: {Id}");
+
+            team = mapper.Map(updatedTeam, team);
+
+            context.Update(team);
+            context.SaveChanges();
+        }
+
         public void DeleteTeamById(int companyId, int Id) {
 
             ValidCompany(companyId);
@@ -91,18 +104,6 @@ namespace TeamProject_Manager_Api.Services
                 throw new NotFoundException($"There is no team with id: {Id}");
 
             context.Teams.Remove(team);
-            context.SaveChanges();
-        }
-
-        public void UpdateTeam(CreateTeam updatedTeam, int Id) {
-            Team team = context.Teams
-                .SingleOrDefault(t => t.Id == Id);
-
-            if (team is null)
-                throw new NotFoundException($"There is no team with id: {Id}");
-
-            team.NameOfTeam = updatedTeam.NameOfTeam;
-
             context.SaveChanges();
         }
 

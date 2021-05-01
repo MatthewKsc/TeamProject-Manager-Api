@@ -89,8 +89,9 @@ namespace TeamProject_Manager_Api.Services{
             if (project is null)
                 throw new NotFoundException($"There is no project with id: {Id}");
 
-            MapUpdatedProject(project, updatedProject);
+            project = mapper.Map(updatedProject, project);
 
+            context.Update(project);
             context.SaveChanges();
         }
 
@@ -111,13 +112,6 @@ namespace TeamProject_Manager_Api.Services{
         private void ValidTeam(int teamId) {
             if (!context.Teams.Any(t => t.Id == teamId))
                 throw new BadRequestException($"There is no team with id {teamId}");
-        }
-
-        private void MapUpdatedProject(Project project, CreateProject dto) {
-            project.Description = dto.Description;
-            project.Title = dto.Title;
-            project.StartOfProject = dto.StartOfProject;
-            project.EndOfProject = dto.EndOfProject;
         }
     }
 }

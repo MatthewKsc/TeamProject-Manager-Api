@@ -92,13 +92,19 @@ namespace TeamProject_Manager_Api.Services
         public void UpdateUser(CreateUser updatedUser, int Id) {
             User user = context.Users
                 .Include(u => u.Address)
+                .Include(u => u.Team)
+                    .ThenInclude(t => t.Company)
                 .SingleOrDefault(u=> u.Id == Id);
 
             if (user is null)
                 throw new NotFoundException($"There is no user with id: {Id}");
 
-            MapUpdatedUser(user, updatedUser);
+            string companyDomainEmail = user.Team.Company.CompanyName;
 
+            user = mapper.Map(updatedUser, user);
+            user.Email = $"{user.FirstName}.{user.LastName}@{companyDomainEmail}.com";
+
+            context.Update(user);
             context.SaveChanges();
         }
 
@@ -119,16 +125,6 @@ namespace TeamProject_Manager_Api.Services
         private void ValidTeam(int teamId) {
             if (!context.Teams.Any(t => t.Id == teamId))
                 throw new BadRequestException($"There is no team with id {teamId}");
-        }
-
-        private void MapUpdatedUser(User user, CreateUser updatedUser) {
-            user.FirstName = updatedUser.FirstName;
-            user.LastName = updatedUser.LastName;
-            user.DateOfBirth = updatedUser.DateOfBirth;
-            user.Address.City = updatedUser.City;
-            user.Address.Street = updatedUser.Street;
-            user.Address.Country = updatedUser.Country;
-            user.Address.PostalCode = updatedUser.PostalCode;
         }
     }
 }
