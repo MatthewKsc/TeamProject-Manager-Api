@@ -26,7 +26,7 @@ namespace TeamProject_Manager_Api.Services
 
         private readonly ProjectManagerDbContext context;
         private readonly IMapper mapper;
-
+        private readonly char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
         public UserService(ProjectManagerDbContext context, IMapper mapper) {
             this.context = context;
             this.mapper = mapper;
@@ -82,6 +82,7 @@ namespace TeamProject_Manager_Api.Services
 
             user.TeamId = teamId;
             user.Email = $"{createUser.FirstName}.{createUser.LastName}@{companyDomainEmail}.com";
+            user.LastName = user.LastName.TrimEnd(digits);
 
             context.Users.Add(user);
             context.SaveChanges();
@@ -103,6 +104,7 @@ namespace TeamProject_Manager_Api.Services
 
             user = mapper.Map(updatedUser, user);
             user.Email = $"{user.FirstName}.{user.LastName}@{companyDomainEmail}.com";
+            user.LastName = user.LastName.TrimEnd(digits);
 
             context.Update(user);
             context.SaveChanges();
