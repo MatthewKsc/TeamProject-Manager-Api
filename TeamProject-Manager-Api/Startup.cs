@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
+using TeamProject_Manager_Api.Dtos.Validators;
 using TeamProject_Manager_Api.Exceptions;
 using TeamProject_Manager_Api.Services;
 
@@ -35,6 +38,8 @@ namespace TeamProject_Manager_Api {
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserProjectsService, UserProjectsService>();
+
+            services.AddScoped<IValidator<CreateTeam>, TeamValidator>();
 
             services.AddScoped<ErrorHandlingMiddleware>();
 
