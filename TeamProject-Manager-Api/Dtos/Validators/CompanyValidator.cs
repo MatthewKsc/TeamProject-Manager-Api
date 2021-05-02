@@ -32,14 +32,12 @@ namespace TeamProject_Manager_Api.Dtos.Validators
                 .WithMessage("City name need to be in Rage of characters from 1 to 85");
 
             RuleFor(x => x.Street)
-                .NotEmpty()
-                .WithMessage("Street name cannot be empty")
+                .NotEmpty().WithMessage("Street name cannot be empty")
                 .Length(1, 100)
                 .WithMessage("Street name need to be in Rage of characters from 1 to 100");
 
             RuleFor(x => x.PostalCode)
-                .NotEmpty()
-                .WithMessage("PostalCode name cannot be empty")
+                .NotEmpty().WithMessage("PostalCode name cannot be empty")
                 .Must(value => Regex.IsMatch(value, @"\d{2}-\d{3}"))
                 .WithMessage("Not a valid PostalCode format");
         }
