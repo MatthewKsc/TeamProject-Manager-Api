@@ -40,6 +40,7 @@ namespace TeamProject_Manager_Api {
             services.AddScoped<IUserProjectsService, UserProjectsService>();
 
             services.AddScoped<IValidator<CreateTeam>, TeamValidator>();
+            services.AddScoped<IValidator<CreateProject>, ProjectValidator>();
 
             services.AddScoped<ErrorHandlingMiddleware>();
 
