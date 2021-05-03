@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TeamProject_Manager_Api.Dtos.Models;
 using TeamProject_Manager_Api.Dtos.Models_Operations;
+using TeamProject_Manager_Api.Dtos.Querying_Models;
 using TeamProject_Manager_Api.Services;
 
 namespace TeamProject_Manager_Api.Controllers{
@@ -20,9 +22,9 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpGet]
-        public ActionResult GetAll([FromRoute] int teamId) {
+        public ActionResult GetAll([FromBody] Query<UserDTO> query, [FromRoute] int teamId) {
 
-            return Ok(service.GetAllUsers(teamId));
+            return Ok(service.GetAllUsers(query ,teamId));
         }
 
         [HttpGet("{Id}")]

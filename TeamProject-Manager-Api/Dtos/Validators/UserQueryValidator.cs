@@ -9,7 +9,7 @@ using TeamProject_Manager_Api.Dtos.Querying_Models;
 
 namespace TeamProject_Manager_Api.Dtos.Validators
 {
-    public class UserQueryValidator : AbstractValidator<QueryResult<UserDTO>>
+    public class UserQueryValidator : AbstractValidator<Query<UserDTO>>
     {
         
     }

@@ -3,19 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Dtos.Models;
 using TeamProject_Manager_Api.Dtos.Models_Operations;
+using TeamProject_Manager_Api.Dtos.Querying_Models;
 using TeamProject_Manager_Api.Exceptions;
 
 namespace TeamProject_Manager_Api.Services
 {
     public interface IUserService {
 
-        List<UserDTO> GetAllUsers(int teamId);
+        PageResult<UserDTO> GetAllUsers(Query<UserDTO> query, int teamId);
         UserDTO GetUserById(int teamId, int Id);
         int CreateUser(CreateUser createUser, int teamId);
         void UpdateUser(CreateUser updatedUser, int Id);
@@ -32,20 +34,46 @@ namespace TeamProject_Manager_Api.Services
             this.mapper = mapper;
         }
 
-        public List<UserDTO> GetAllUsers(int teamId) {
+        public PageResult<UserDTO> GetAllUsers(Query<UserDTO> query, int teamId) {
 
             ValidTeam(teamId);
 
-            List<User> users = context.Users
+            IQueryable<User> baseResult = context.Users
                 .Where(u => u.TeamId == teamId)
                 .Include(u => u.Address)
                 .Include(u => u.Team)
+                .Where(u => query.searchPhrase == null ||
+                    (
+                        u.FirstName.ToLower().Contains(query.searchPhrase.ToLower()) ||
+                        u.LastName.ToLower().Contains(query.searchPhrase.ToLower()) ||
+                        u.Email.ToLower().Contains(query.searchPhrase.ToLower())
+                    )
+                );
+
+            if (!string.IsNullOrEmpty(query.SortBy)) {
+
+                var columnsToSortBy = new Dictionary<string, Expression<Func<User, object>>>() {
+                    {nameof(User.FirstName), u=> u.FirstName},
+                    {nameof(User.LastName), u=> u.LastName},
+                    {nameof(User.Team), u=> u.Team}
+                };
+
+                var selectedColumn = columnsToSortBy[query.SortBy];
+
+                baseResult = query.SortDirection == SortDirection.ASC ? 
+                    baseResult.OrderBy(selectedColumn) : baseResult.OrderByDescending(selectedColumn);
+            }
+
+            List<User> users = baseResult
+                .Skip(query.pageSize * (query.pageNumber - 1))
+                .Take(query.pageSize)
                 .ToList();
 
-            if (users.Count < 1)
-                throw new NotFoundException("There is no users to display");
+            int totalItemCount = baseResult.Count();
 
-            var result = mapper.Map<List<UserDTO>>(users);
+            var DTOs = mapper.Map<List<UserDTO>>(users);
+
+            var result = new PageResult<UserDTO>(DTOs, totalItemCount, query.pageSize, query.pageNumber);
 
             return result;
         }
