@@ -9,12 +9,13 @@ using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Dtos.Models;
 using TeamProject_Manager_Api.Dtos.Models_Operations;
+using TeamProject_Manager_Api.Dtos.Querying_Models;
 using TeamProject_Manager_Api.Exceptions;
 
 namespace TeamProject_Manager_Api.Services{
     public interface IProjectService {
 
-        List<ProjectDTO> GetAllProjects(int teamId);
+        PageResult<ProjectDTO> GetAllProjects(Query<ProjectDTO> query, int teamId);
         ProjectDTO GetProjectById(int teamId, int Id);
         int CreateProject(CreateProject project, int teamId);
         void UpdateProject(CreateProject updatedProject, int Id);
@@ -31,21 +32,37 @@ namespace TeamProject_Manager_Api.Services{
             this.mapper = mapper;
         }
 
-        public List<ProjectDTO> GetAllProjects(int teamId) {
+        public PageResult<ProjectDTO> GetAllProjects(Query<ProjectDTO> query, int teamId) {
 
             ValidTeam(teamId);
 
-            List<Project> projects = context.Projects
+            IQueryable<Project> baseQuery = context.Projects
                 .Where(p => p.OwnerTeamId == teamId)
                 .Include(t => t.OwnerTeam)
-                .Include(p=>p.UserProjects)
+                .Include(p => p.UserProjects)
                     .ThenInclude(up => up.User)
+                .Where(p=> query.searchPhrase == null ||
+                    (
+                        p.Description.ToLower().Equals(query.searchPhrase.ToLower()) ||
+                        p.Title.ToLower().Equals(query.searchPhrase.ToLower())
+                    )
+                );
+
+            if (!string.IsNullOrEmpty(query.SortBy)) {
+                baseQuery = query.SortDirection == SortDirection.ASC ? 
+                    baseQuery.OrderBy(p => p.Title) : baseQuery.OrderByDescending(p => p.Title);
+            }
+
+            List<Project> projects = baseQuery
+                .Skip(query.pageSize * (query.pageNumber - 1))
+                .Take(query.pageSize)
                 .ToList();
 
-            if (projects.Count < 1)
-                throw new NotFoundException("There is no projects to display");
+            int totalItemsCount = projects.Count;
 
-            var result = mapper.Map<List<ProjectDTO>>(projects);
+            var DTOs = mapper.Map<List<ProjectDTO>>(projects);
+
+            var result = new PageResult<ProjectDTO>(DTOs, totalItemsCount, query.pageSize, query.pageNumber);
 
             return result;
         }
