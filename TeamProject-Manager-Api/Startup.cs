@@ -14,7 +14,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
+using TeamProject_Manager_Api.Dtos.Models;
 using TeamProject_Manager_Api.Dtos.Models_Operations;
+using TeamProject_Manager_Api.Dtos.Querying_Models;
 using TeamProject_Manager_Api.Dtos.Validators;
 using TeamProject_Manager_Api.Exceptions;
 using TeamProject_Manager_Api.Services;
@@ -43,6 +45,8 @@ namespace TeamProject_Manager_Api {
             services.AddScoped<IValidator<CreateProject>, ProjectValidator>();
             services.AddScoped<IValidator<CreateCompany>, CompanyValidator>();
             services.AddScoped<IValidator<CreateUser>, UserValidator>();
+            services.AddScoped<IValidator<Query<UserDTO>>, UserQueryValidator>();
+            services.AddScoped<IValidator<Query<ProjectDTO>>, ProjectQueryValidator>();
 
 
             services.AddScoped<ErrorHandlingMiddleware>();
