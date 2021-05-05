@@ -51,6 +51,7 @@ namespace TeamProject_Manager_Api {
 
             services.AddScoped<ErrorHandlingMiddleware>();
 
+            services.AddSwaggerGen();
 
             services.AddDbContext<ProjectManagerDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"))
@@ -75,6 +76,11 @@ namespace TeamProject_Manager_Api {
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(s => {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Project-Manager API V1");
+            });
 
             app.UseRouting();
 
