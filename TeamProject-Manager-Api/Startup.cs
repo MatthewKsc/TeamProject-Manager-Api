@@ -43,25 +43,6 @@ namespace TeamProject_Manager_Api {
 
             services.AddScoped<ErrorHandlingMiddleware>();
 
-            services.AddSwaggerGen( s=> {
-                s.EnableAnnotations();
-                s.SwaggerDoc("v1", new OpenApiInfo {
-                    Version = "v1",
-                    Title = "Project Manager API",
-                    Description = "API create in ASP.NET Core Web for managing project within a team/company. Project is one of my Github projects to give a sight at what can i do :) ",
-                    Contact = new OpenApiContact{
-                        Name= "Mateusz Ksciuk",
-                        Email = "ksciukmateusz@gmail.com",
-                        Url = new Uri("https://www.linkedin.com/in/mateusz-ksciuk-7a0b69197/?locale=en_US")
-                    },
-                    License = new OpenApiLicense {
-                        Name = "Github Repo",
-                        Url = new Uri("https://github.com/MatthewKsc/TeamProject-Manager-Api")
-                    }
-                });
-
-            });
-
             services.AddDbContext<ProjectManagerDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"))
             );
