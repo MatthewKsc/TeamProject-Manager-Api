@@ -53,7 +53,7 @@ namespace TeamProject_Manager_Api {
             services.AddScoped<ErrorHandlingMiddleware>();
 
             services.AddSwaggerGen( s=> {
-
+                s.EnableAnnotations();
                 s.SwaggerDoc("v1", new OpenApiInfo {
                     Version = "v1",
                     Title = "Project Manager API",

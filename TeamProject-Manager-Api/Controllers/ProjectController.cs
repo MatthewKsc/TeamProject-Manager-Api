@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Linq;
 using System.Text;
@@ -21,18 +22,21 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Retrieves all projects within API")]
         public ActionResult GetAll([FromBody]Query<ProjectDTO> query, [FromRoute] int teamId) {
 
             return Ok(service.GetAllProjects(query, teamId));
         }
 
         [HttpGet("{Id}")]
+        [SwaggerOperation(Summary = "Retrieve project by provided Id")]
         public ActionResult GetById([FromRoute] int teamId, [FromRoute] int Id) {
 
             return Ok(service.GetProjectById(teamId, Id));
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a new project by specific model and team Id")]
         public ActionResult CreateProject([FromBody] CreateProject createProject, [FromRoute] int teamId) {
             int id = service.CreateProject(createProject, teamId);
 
@@ -40,6 +44,7 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpPut("{Id}")]
+        [SwaggerOperation(Summary = "Update specific project by model and provided Id")]
         public ActionResult UpdateProject([FromBody] CreateProject updatedProject, [FromRoute] int Id) {
             service.UpdateProject(updatedProject, Id);
 
@@ -47,6 +52,7 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpDelete("{Id}")]
+        [SwaggerOperation(Summary = "Delete specific project from api by provided Id ")]
         public ActionResult DeleteById([FromRoute] int teamId, [FromRoute] int Id) {
             service.DeleteProjectById(teamId, Id);
 
