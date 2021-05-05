@@ -15,8 +15,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.Exceptions;
-using TeamProject_Manager_Api.Services;
-using Microsoft.OpenApi.Models;
 using TeamProject_Manager_Api.Installer;
 
 namespace TeamProject_Manager_Api {
@@ -32,12 +30,6 @@ namespace TeamProject_Manager_Api {
 
             services.AddControllers().AddFluentValidation();
             services.AddAutoMapper(this.GetType().Assembly);
-
-            services.AddScoped<ICompanyService, CompanyService>();
-            services.AddScoped<IProjectService, ProjectService>();
-            services.AddScoped<ITeamService, TeamService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserProjectsService, UserProjectsService>();
 
             services.InstallServicesInAssembly(Configuration);
 
