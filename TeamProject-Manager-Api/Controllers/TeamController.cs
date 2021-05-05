@@ -21,21 +21,21 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpGet]
-        [SwaggerOperation(Summary = "Retrieves all teams within API")]
+        [SwaggerOperation(Summary = "Retrieves all teams within specified comapny by companyId")]
         public ActionResult GetAll([FromRoute]int companyId) {
 
             return Ok(service.GetAllTeams(companyId));
         }
 
         [HttpGet("{Id}")]
-        [SwaggerOperation(Summary = "Retrieve team by provided Id")]
+        [SwaggerOperation(Summary = "Retrieve team by provided Id and companyId")]
         public ActionResult GetById([FromRoute] int companyId, [FromRoute] int Id) {
             
             return Ok(service.GetTeamById(companyId, Id));
         }
 
         [HttpPost]
-        [SwaggerOperation(Summary = "Create a new team by specific model and company Id")]
+        [SwaggerOperation(Summary = "Create a new team by specific model and companyId")]
         public ActionResult CreatTeam([FromBody] CreateTeam createTeam, [FromRoute] int companyId) {
             int id = service.CreateTeam(createTeam, companyId);
 

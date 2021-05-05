@@ -22,7 +22,7 @@ namespace TeamProject_Manager_Api.Controllers{
 
 
         [HttpGet]
-        [SwaggerOperation(Summary = "Retrieves all comapnies within API")]
+        [SwaggerOperation(Summary = "Retrieves all comapnies")]
         public ActionResult GetAllComapnies(){
 
             return Ok(service.GetAllComapnies());

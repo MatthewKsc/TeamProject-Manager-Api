@@ -22,21 +22,21 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpGet]
-        [SwaggerOperation(Summary = "Retrieves all projects within API")]
+        [SwaggerOperation(Summary = "Retrieves projects by query model and specific team by teamId")]
         public ActionResult GetAll([FromBody]Query<ProjectDTO> query, [FromRoute] int teamId) {
 
             return Ok(service.GetAllProjects(query, teamId));
         }
 
         [HttpGet("{Id}")]
-        [SwaggerOperation(Summary = "Retrieve project by provided Id")]
+        [SwaggerOperation(Summary = "Retrieve project by provided Id and teamId")]
         public ActionResult GetById([FromRoute] int teamId, [FromRoute] int Id) {
 
             return Ok(service.GetProjectById(teamId, Id));
         }
 
         [HttpPost]
-        [SwaggerOperation(Summary = "Create a new project by specific model and team Id")]
+        [SwaggerOperation(Summary = "Create a new project by specific model and teamId")]
         public ActionResult CreateProject([FromBody] CreateProject createProject, [FromRoute] int teamId) {
             int id = service.CreateProject(createProject, teamId);
 
@@ -52,7 +52,7 @@ namespace TeamProject_Manager_Api.Controllers {
         }
 
         [HttpDelete("{Id}")]
-        [SwaggerOperation(Summary = "Delete specific project from api by provided Id ")]
+        [SwaggerOperation(Summary = "Delete specific project from api by provided Id and teamId ")]
         public ActionResult DeleteById([FromRoute] int teamId, [FromRoute] int Id) {
             service.DeleteProjectById(teamId, Id);
 

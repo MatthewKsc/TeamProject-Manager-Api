@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,18 +23,21 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Retrieves users by query model and specific team by teamId")]
         public ActionResult GetAll([FromBody] Query<UserDTO> query, [FromRoute] int teamId) {
 
             return Ok(service.GetAllUsers(query ,teamId));
         }
 
         [HttpGet("{Id}")]
+        [SwaggerOperation(Summary = "Retrieve user by provided Id and teamId")]
         public ActionResult GetById([FromRoute] int teamId, [FromRoute] int Id) {
             
             return Ok(service.GetUserById(teamId, Id));
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a new user by specific model and teamId")]
         public ActionResult CreatUser([FromBody] CreateUser createUser, [FromRoute] int teamId) {
             int id = service.CreateUser(createUser, teamId);
 
@@ -41,6 +45,7 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpPut("{Id}")]
+        [SwaggerOperation(Summary = "Update specific user by model and provided Id")]
         public ActionResult UpdateUser([FromBody] CreateUser updatedUser, [FromRoute] int Id) {
             service.UpdateUser(updatedUser, Id);
 
@@ -48,6 +53,7 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpDelete("{Id}")]
+        [SwaggerOperation(Summary = "Delete specific user from api by provided Id and teamId ")]
         public ActionResult DeleteById([FromRoute] int teamId, [FromRoute] int Id) {
             service.DeleteUserById(teamId, Id);
 
