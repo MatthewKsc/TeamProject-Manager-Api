@@ -21,4 +21,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="markdown\images\" />
+  </ItemGroup>
+
 </Project>
