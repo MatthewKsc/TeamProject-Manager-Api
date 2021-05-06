@@ -28,10 +28,14 @@ namespace TeamProject_Manager_Api {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
 
-            services.AddControllers().AddFluentValidation();
+            services.AddControllers()
+                .AddFluentValidation();
+
             services.AddAutoMapper(this.GetType().Assembly);
 
             services.InstallServicesInAssembly(Configuration);
+
+            services.AddScoped<ProjectManagerSeeder>();
 
             services.AddScoped<ErrorHandlingMiddleware>();
 
@@ -42,8 +46,6 @@ namespace TeamProject_Manager_Api {
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
-            services.AddScoped<ProjectManagerSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
