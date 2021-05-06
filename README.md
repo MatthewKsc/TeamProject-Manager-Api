@@ -30,9 +30,9 @@ Project is created in C# and .Net Framework. Testing in this project is via Post
 * `\TeamProject-Manager-Api\Services` -> Buissnes logic layout to perform action on database
 
 ## SQL Server Diagram
-![Alt text](https://github.com/MatthewKsc/TeamProject-Manager-Api/tree/master/TeamProject-Manager-Api/markdown/images/MSSQL.png "sqlServer")
+![Alt text](TeamProject-Manager-Api/markdown/images/MSSQL.png "sqlServer")
 <br>
 <br>
 ## Swagger UI
-![Alt text](https://github.com/MatthewKsc/TeamProject-Manager-Api/tree/master/TeamProject-Manager-Api/markdown/images/SwaggerUI.png "sqlServer")
+![Alt text](TeamProject-Manager-Api/markdown/images/SwaggerUI.png "sqlServer")
 
