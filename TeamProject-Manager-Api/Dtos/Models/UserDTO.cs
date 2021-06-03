@@ -8,6 +8,7 @@ namespace TeamProject_Manager_Api.Dtos.Models
 {
     public class UserDTO{
 
+        public int Id { get; set; }
         public string Team { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

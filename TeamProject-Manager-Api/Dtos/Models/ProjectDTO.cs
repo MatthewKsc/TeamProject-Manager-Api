@@ -8,6 +8,7 @@ namespace TeamProject_Manager_Api.Dtos.Models
 {
     public class ProjectDTO{
 
+        public int Id { get; set; }
         public string ResponsibleTeam { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
