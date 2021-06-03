@@ -10,6 +10,7 @@ using TeamProject_Manager_Api.Exceptions;
 using AutoMapper;
 using TeamProject_Manager_Api.Dtos.Models;
 using TeamProject_Manager_Api.Dtos.Models_Operations;
+using TeamProject_Manager_Api.Repositories;
 
 namespace TeamProject_Manager_Api.Services
 {
@@ -24,19 +25,17 @@ namespace TeamProject_Manager_Api.Services
 
     public class CompanyService : ICompanyService{
 
-        private readonly ProjectManagerDbContext context;
+        private readonly ICompanyRepository companyRepository;
         private readonly IMapper mapper;
 
-        public CompanyService(ProjectManagerDbContext context, IMapper mapper) {
-            this.context = context;
+        public CompanyService(ICompanyRepository companyRepository,  IMapper mapper) {
+            this.companyRepository = companyRepository;
             this.mapper = mapper;
         }
 
         public List<CompanyDTO> GetAllComapnies() {
 
-            List<Company> companies = context.Companies
-                .Include(c => c.Address)
-                .ToList();
+            List<Company> companies = companyRepository.GetAllComapnies();
 
             if (companies.Count < 1)
                 throw new NotFoundException("There is no companies to display");
@@ -47,9 +46,7 @@ namespace TeamProject_Manager_Api.Services
         }
 
         public CompanyDTO GetComapnyById(int Id) {
-            Company company = context.Companies
-                .Include(c => c.Address)
-                .SingleOrDefault(c => c.Id == Id);
+            Company company = companyRepository.GetComapnyByIdWithAddress(Id);
 
             if (company is null)
                 throw new NotFoundException($"There is no company with id: {Id}");
@@ -62,33 +59,28 @@ namespace TeamProject_Manager_Api.Services
         public int CreateCompany(CreateCompany dto) {
             Company company = mapper.Map<Company>(dto);
 
-            context.Companies.Add(company);
-            context.SaveChanges();
+            companyRepository.CreateCompany(company);
 
             return company.Id;
         }
         public void UpdateComapny(CreateCompany updatedComapny, int Id) {
-            Company company = context.Companies
-                .Include(c=> c.Address)
-                .SingleOrDefault(c => c.Id == Id);
+            Company company = companyRepository.GetComapnyByIdWithAddress(Id);
 
             if (company is null)
                 throw new NotFoundException($"There is no company with id: {Id}");
 
             company = mapper.Map(updatedComapny, company);
 
-            context.Update(company);
-            context.SaveChanges();
+            companyRepository.UpdateComapny(company);
         }
 
         public void DeleteComapnyById(int Id) {
-            Company company = context.Companies.SingleOrDefault(c => c.Id == Id);
+            Company company = companyRepository.GetComapnyById(Id);
 
             if(company is null)
                 throw new NotFoundException($"There is no company with id: {Id}");
 
-            context.Companies.Remove(company);
-            context.SaveChanges();
+            companyRepository.DeleteComapny(company);
         }
     }
 }
