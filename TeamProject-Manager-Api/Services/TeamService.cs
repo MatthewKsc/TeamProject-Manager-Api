@@ -21,7 +21,7 @@ namespace TeamProject_Manager_Api.Services
         int CreateTeam(CreateTeam createTeam, int companyId);
         void UpdateTeam(CreateTeam updatedTeam, int Id);
         void DeleteTeamById(int Id);
-       
+        bool ValidTeam(int Id);
     }
 
     public class TeamService : ITeamService{
@@ -88,6 +88,10 @@ namespace TeamProject_Manager_Api.Services
                 throw new NotFoundException($"There is no team with id: {Id}");
 
             teamRepository.DeleteTeamById(team);
+        }
+
+        public bool ValidTeam(int Id) {
+            return teamRepository.ValidTeam(Id);
         }
     }
 }

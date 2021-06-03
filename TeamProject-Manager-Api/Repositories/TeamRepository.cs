@@ -16,7 +16,7 @@ namespace TeamProject_Manager_Api.Repositories
         void CreateTeam(Team team);
         void UpdateTeam(Team team);
         void DeleteTeamById(Team team);
-
+        bool ValidTeam(int Id);
 
     }
 
@@ -59,6 +59,10 @@ namespace TeamProject_Manager_Api.Repositories
         public void DeleteTeamById(Team team) {
             context.Teams.Remove(team);
             context.SaveChanges();
+        }
+
+        public bool ValidTeam(int Id) {
+            return context.Teams.Any(t => t.Id == Id);
         }
     }
 }

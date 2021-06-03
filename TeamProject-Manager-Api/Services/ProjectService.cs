@@ -11,52 +11,38 @@ using TeamProject_Manager_Api.Dtos.Models;
 using TeamProject_Manager_Api.Dtos.Models_Operations;
 using TeamProject_Manager_Api.Dtos.Querying_Models;
 using TeamProject_Manager_Api.Exceptions;
+using TeamProject_Manager_Api.Repositories;
 
 namespace TeamProject_Manager_Api.Services{
     public interface IProjectService {
 
         PageResult<ProjectDTO> GetAllProjects(Query<ProjectDTO> query, int teamId);
-        ProjectDTO GetProjectById(int teamId, int Id);
+        ProjectDTO GetProjectById(int Id);
         int CreateProject(CreateProject project, int teamId);
         void UpdateProject(CreateProject updatedProject, int Id);
-        void DeleteProjectById(int teamId, int Id);
+        void DeleteProject(int Id);
     }
 
     public class ProjectService : IProjectService{
-        
-        private readonly ProjectManagerDbContext context;
+
+        private readonly IProjectRepository projectRepository;
         private readonly IMapper mapper;
 
-        public ProjectService(ProjectManagerDbContext context, IMapper mapper) {
-            this.context = context;
+        public ProjectService(IProjectRepository projectRepository,  IMapper mapper) {
+            this.projectRepository = projectRepository;
             this.mapper = mapper;
         }
 
         public PageResult<ProjectDTO> GetAllProjects(Query<ProjectDTO> query, int teamId) {
 
-            ValidTeam(teamId);
-
-            IQueryable<Project> baseQuery = context.Projects
-                .Where(p => p.OwnerTeamId == teamId)
-                .Include(t => t.OwnerTeam)
-                .Include(p => p.UserProjects)
-                    .ThenInclude(up => up.User)
-                .Where(p=> query.searchPhrase == null ||
-                    (
-                        p.Description.ToLower().Equals(query.searchPhrase.ToLower()) ||
-                        p.Title.ToLower().Equals(query.searchPhrase.ToLower())
-                    )
-                );
+            IQueryable<Project> baseQuery = projectRepository.GetProjectQuery(query, teamId);
 
             if (!string.IsNullOrEmpty(query.SortBy)) {
                 baseQuery = query.SortDirection == SortDirection.ASC ? 
                     baseQuery.OrderBy(p => p.Title) : baseQuery.OrderByDescending(p => p.Title);
             }
 
-            List<Project> projects = baseQuery
-                .Skip(query.pageSize * (query.pageNumber - 1))
-                .Take(query.pageSize)
-                .ToList();
+            List<Project> projects = projectRepository.GetProjectsWithQuery(query, baseQuery);
 
             int totalItemsCount = projects.Count;
 
@@ -67,15 +53,9 @@ namespace TeamProject_Manager_Api.Services{
             return result;
         }
 
-        public ProjectDTO GetProjectById(int teamId, int Id) {
+        public ProjectDTO GetProjectById(int Id) {
 
-            ValidTeam(teamId);
-
-            Project project = context.Projects
-                .Include(t=> t.OwnerTeam)
-                .Include(p=> p.UserProjects)
-                    .ThenInclude(up=>up.User)
-                .SingleOrDefault(p => p.OwnerTeamId == teamId && p.Id == Id);
+            Project project = projectRepository.GetProjectByIdWithIncludes(Id);
 
             if (project is null)
                 throw new NotFoundException($"There is no project with id: {Id}");
@@ -87,48 +67,33 @@ namespace TeamProject_Manager_Api.Services{
 
         public int CreateProject(CreateProject createProject, int teamId) {
 
-            ValidTeam(teamId);
-
             Project project = mapper.Map<Project>(createProject);
 
             project.OwnerTeamId = teamId;
 
-            context.Projects.Add(project);
-            context.SaveChanges();
+            projectRepository.CreateProject(project);
 
             return project.Id;
         }
 
         public void UpdateProject(CreateProject updatedProject, int Id) {
 
-            Project project = context.Projects.SingleOrDefault(p => p.Id == Id);
+            Project project = projectRepository.GetProjectById(Id);
 
             if (project is null)
                 throw new NotFoundException($"There is no project with id: {Id}");
 
             project = mapper.Map(updatedProject, project);
 
-            context.Update(project);
-            context.SaveChanges();
+            projectRepository.UpdateProject(project);
         }
 
-        public void DeleteProjectById(int teamId, int Id) {
+        public void DeleteProject(int Id) {
 
-            ValidTeam(teamId);
-
-            Project project = context
-                .Projects.SingleOrDefault(p => p.OwnerTeamId == teamId && p.Id == Id);
+            Project project = projectRepository.GetProjectById(Id);
 
             if (project is null)
                 throw new NotFoundException($"There is no project with id: {Id}");
-
-            context.Projects.Remove(project);
-            context.SaveChanges();
-        }
-
-        private void ValidTeam(int teamId) {
-            if (!context.Teams.Any(t => t.Id == teamId))
-                throw new BadRequestException($"There is no team with id {teamId}");
         }
     }
 }
