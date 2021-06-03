@@ -16,6 +16,7 @@ namespace TeamProject_Manager_Api.Repositories
         void CreateCompany(Company company);
         void UpdateComapny(Company company);
         void DeleteComapny(Company company);
+        bool ValidComapny(int companyId);
     }
 
     public class CompanyRepository : ICompanyRepository {
@@ -56,6 +57,10 @@ namespace TeamProject_Manager_Api.Repositories
         public void DeleteComapny(Company company) {
             context.Companies.Remove(company);
             context.SaveChanges();
+        }
+
+        public bool ValidComapny(int companyId) {
+            return context.Companies.Any(c => c.Id == companyId);
         }
     }
 }

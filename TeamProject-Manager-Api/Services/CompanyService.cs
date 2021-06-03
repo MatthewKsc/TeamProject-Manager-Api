@@ -21,6 +21,7 @@ namespace TeamProject_Manager_Api.Services
         int CreateCompany(CreateCompany dto);
         void DeleteComapnyById(int Id);
         void UpdateComapny(CreateCompany updatedComapny, int Id);
+        public bool ValidCompany(int companyId);
     }
 
     public class CompanyService : ICompanyService{
@@ -81,6 +82,10 @@ namespace TeamProject_Manager_Api.Services
                 throw new NotFoundException($"There is no company with id: {Id}");
 
             companyRepository.DeleteComapny(company);
+        }
+
+        public bool ValidCompany(int companyId) {
+            return companyRepository.ValidComapny(companyId);
         }
     }
 }
