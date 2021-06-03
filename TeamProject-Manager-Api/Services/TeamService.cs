@@ -10,37 +10,33 @@ using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Dtos.Models;
 using TeamProject_Manager_Api.Dtos.Models_Operations;
 using TeamProject_Manager_Api.Exceptions;
+using TeamProject_Manager_Api.Repositories;
 
 namespace TeamProject_Manager_Api.Services
 {
     public interface ITeamService {
 
         List<TeamDTO> GetAllTeams(int companyId);
-        TeamDTO GetTeamById(int companyId, int Id);
+        TeamDTO GetTeamById(int Id);
         int CreateTeam(CreateTeam createTeam, int companyId);
         void UpdateTeam(CreateTeam updatedTeam, int Id);
-        void DeleteTeamById(int companyId, int Id);
+        void DeleteTeamById(int Id);
        
     }
 
     public class TeamService : ITeamService{
-        
-        private readonly ProjectManagerDbContext context;
+
+        private readonly ITeamRepository teamRepository;
         private readonly IMapper mapper;
 
-        public TeamService(ProjectManagerDbContext context, IMapper mapper) {
-            this.context = context;
+        public TeamService(ITeamRepository teamRepository, IMapper mapper) {
+            this.teamRepository = teamRepository;
             this.mapper = mapper;
         }
 
         public List<TeamDTO> GetAllTeams(int companyId) {
 
-            ValidCompany(companyId);
-
-            List<Team> teams = context.Teams
-                .Where(t => t.CompanyId == companyId)
-                .Include(t => t.TeamMembers)
-                .ToList();
+            List<Team> teams = teamRepository.GetTeams(companyId);
 
             if (teams.Count < 1)
                 throw new NotFoundException("There is no teams to display");
@@ -50,13 +46,9 @@ namespace TeamProject_Manager_Api.Services
             return result;
         }
 
-        public TeamDTO GetTeamById(int companyId, int Id) {
+        public TeamDTO GetTeamById(int Id) {
 
-            ValidCompany(companyId);
-
-            Team team = context.Teams
-                .Include(t => t.TeamMembers)
-                .SingleOrDefault(t => t.CompanyId == companyId && t.Id == Id);
+            Team team = teamRepository.GetTeamByIdWithTeamMembers(Id); 
 
             if (team is null)
                 throw new NotFoundException($"There is no team with id: {Id}");
@@ -68,48 +60,34 @@ namespace TeamProject_Manager_Api.Services
 
         public int CreateTeam(CreateTeam createTeam, int companyId) {
 
-            ValidCompany(companyId);
-
             Team team = mapper.Map<Team>(createTeam);
 
             team.CompanyId = companyId;
 
-            context.Teams.Add(team);
-            context.SaveChanges();
+            teamRepository.CreateTeam(team);
 
             return team.Id;
         }
 
         public void UpdateTeam(CreateTeam updatedTeam, int Id) {
-            Team team = context.Teams
-                .SingleOrDefault(t => t.Id == Id);
+            Team team = teamRepository.GetTeamById(Id);
 
             if (team is null)
                 throw new NotFoundException($"There is no team with id: {Id}");
 
             team = mapper.Map(updatedTeam, team);
 
-            context.Update(team);
-            context.SaveChanges();
+            teamRepository.UpdateTeam(team);
         }
 
-        public void DeleteTeamById(int companyId, int Id) {
+        public void DeleteTeamById(int Id) {
 
-            ValidCompany(companyId);
-
-            Team team = context.Teams
-                .SingleOrDefault(t => t.CompanyId == companyId && t.Id == Id);
+            Team team = teamRepository.GetTeamById(Id);
 
             if (team is null)
                 throw new NotFoundException($"There is no team with id: {Id}");
 
-            context.Teams.Remove(team);
-            context.SaveChanges();
-        }
-
-        private void ValidCompany(int companyId) {
-            if (!context.Companies.Any(c => c.Id == companyId))
-                throw new BadRequestException($"There is no company with id {companyId}");
+            teamRepository.DeleteTeamById(team);
         }
     }
 }
