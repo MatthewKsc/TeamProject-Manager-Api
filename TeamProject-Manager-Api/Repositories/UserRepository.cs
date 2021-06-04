@@ -58,7 +58,7 @@ namespace TeamProject_Manager_Api.Repositories
                 .Where(u => u.TeamId == teamId)
                 .Include(u => u.Address)
                 .Include(u => u.Team)
-                .Where(u => query.searchPhrase == null ||
+                .Where(u => string.IsNullOrEmpty(query.searchPhrase) || string.IsNullOrWhiteSpace(query.searchPhrase) ||
                     (
                         u.FirstName.ToLower().Contains(query.searchPhrase.ToLower()) ||
                         u.LastName.ToLower().Contains(query.searchPhrase.ToLower()) ||
