@@ -17,6 +17,7 @@ namespace TeamProject_Manager_Api.Repositories
         void UpdateTeam(Team team);
         void DeleteTeamById(Team team);
         bool ValidTeam(int Id);
+        string GetCompanyDomain(int Id);
 
     }
 
@@ -63,6 +64,15 @@ namespace TeamProject_Manager_Api.Repositories
 
         public bool ValidTeam(int Id) {
             return context.Teams.Any(t => t.Id == Id);
+        }
+
+        public string GetCompanyDomain(int Id) {
+            return context.Teams
+                .Include(t => t.Company)
+                .SingleOrDefault(t => t.Id == Id)
+                .Company
+                .CompanyName
+                .ToLower();
         }
     }
 }

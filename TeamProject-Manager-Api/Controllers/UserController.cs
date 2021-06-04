@@ -13,7 +13,7 @@ using TeamProject_Manager_Api.Services;
 namespace TeamProject_Manager_Api.Controllers{
 
     [ApiController]
-    [Route("api/{teamId}/users")]
+    [Route("api/users")]
     public class UserController : ControllerBase{
         
         private readonly IUserService service;
@@ -22,7 +22,7 @@ namespace TeamProject_Manager_Api.Controllers{
             this.service = service;
         }
 
-        [HttpGet]
+        [HttpGet("team/{teamId}")]
         [SwaggerOperation(Summary = "Retrieves users by query model and specific team by teamId")]
         public ActionResult GetAll([FromBody] Query<UserDTO> query, [FromRoute] int teamId) {
 
@@ -30,18 +30,18 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpGet("{Id}")]
-        [SwaggerOperation(Summary = "Retrieve user by provided Id and teamId")]
-        public ActionResult GetById([FromRoute] int teamId, [FromRoute] int Id) {
+        [SwaggerOperation(Summary = "Retrieve user by provided Id")]
+        public ActionResult GetById([FromRoute] int Id) {
             
-            return Ok(service.GetUserById(teamId, Id));
+            return Ok(service.GetUserById(Id));
         }
 
-        [HttpPost]
+        [HttpPost("{teamId}")]
         [SwaggerOperation(Summary = "Create a new user by specific model and teamId")]
         public ActionResult CreatUser([FromBody] CreateUser createUser, [FromRoute] int teamId) {
             int id = service.CreateUser(createUser, teamId);
 
-            return Created($"api/{teamId}/teams/{id}", null);
+            return Created($"api/users/{id}", null);
         }
 
         [HttpPut("{Id}")]
@@ -53,9 +53,9 @@ namespace TeamProject_Manager_Api.Controllers{
         }
 
         [HttpDelete("{Id}")]
-        [SwaggerOperation(Summary = "Delete specific user from api by provided Id and teamId ")]
-        public ActionResult DeleteById([FromRoute] int teamId, [FromRoute] int Id) {
-            service.DeleteUserById(teamId, Id);
+        [SwaggerOperation(Summary = "Delete specific user from api by provided Id")]
+        public ActionResult DeleteById( [FromRoute] int Id) {
+            service.DeleteUserById(Id);
 
             return NoContent();
         }

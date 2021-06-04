@@ -22,6 +22,7 @@ namespace TeamProject_Manager_Api.Services
         void UpdateTeam(CreateTeam updatedTeam, int Id);
         void DeleteTeamById(int Id);
         bool ValidTeam(int Id);
+        string GetCompanyDomain(int Id);
     }
 
     public class TeamService : ITeamService{
@@ -91,7 +92,12 @@ namespace TeamProject_Manager_Api.Services
         }
 
         public bool ValidTeam(int Id) {
+            //to implement
             return teamRepository.ValidTeam(Id);
+        }
+
+        public string GetCompanyDomain(int Id) {
+            return teamRepository.GetCompanyDomain(Id);
         }
     }
 }
