@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TeamProject_Manager_Api.dao;
 using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Exceptions;
+using TeamProject_Manager_Api.Repositories;
 
 namespace TeamProject_Manager_Api.Services
 {
@@ -19,72 +20,68 @@ namespace TeamProject_Manager_Api.Services
 
     public class UserProjectsService: IUserProjectsService{
 
-        private readonly ProjectManagerDbContext context;
+        private readonly IUserProjectsRepository userProjectsRepository;
+        private readonly IProjectRepository projectRepository;
+        private readonly IUserRepository userRepository;
 
-        public UserProjectsService(ProjectManagerDbContext context) {
-            this.context = context;
+        public UserProjectsService(IUserProjectsRepository userProjectsRepository, 
+                    IProjectRepository projectRepository, 
+                    IUserRepository userRepository) {
+            this.userProjectsRepository = userProjectsRepository;
+            this.projectRepository = projectRepository;
+            this.userRepository = userRepository;
         }
 
         public void AddUserToProject(string userEmail, int projectId) {
 
-            Project project = context.Projects
-                .SingleOrDefault(p => p.Id == projectId);
+            Project project = projectRepository.GetProjectById(projectId);
 
             if (project is null)
                 throw new NotFoundException($"There is no such project with id: {projectId}");
 
-            User user = 
-                context.Users.SingleOrDefault(u => u.Email.ToLower().Equals(userEmail.ToLower()));
+            User user = userRepository.GetUserByEmail(userEmail);
 
             if (user is null)
                 throw new NotFoundException($"There is no such user with Email: {userEmail}");
 
             UserProject userProject = new UserProject(user, project);
 
-            context.UserProjects.Add(userProject);
-            context.SaveChanges();
+            userProjectsRepository.AddUserProject(userProject);
         }
 
         public void AddUserToProject(List<string> userEmail, int projectId) {
-            Project project = context.Projects
-                .SingleOrDefault(p => p.Id == projectId);
+            Project project = projectRepository.GetProjectById(projectId);
 
             if (project is null)
                 throw new NotFoundException($"There is no such project with id: {projectId}");
 
-            List<User> users = context.Users
-                .Where(u => userEmail.Contains(u.Email)).ToList();
+            List<User> users = userRepository.GetUserByEmail(userEmail);
 
             if (userEmail.Count != users.Count || users.Count < 1)
                 throw new NotFoundException("One or more users are not valid please check Emails and Project");
 
             List<UserProject> userProjects = UserProject.AddManyUsersToProject(users, project);
 
-            context.UserProjects.AddRange(userProjects);
-            context.SaveChanges();
+            userProjectsRepository.AddUserProject(userProjects);
         }
 
         public void RemoveUserFromProject(string userEmail, int projectId) {
-            Project project = context.Projects
-               .SingleOrDefault(p => p.Id == projectId);
+            Project project = projectRepository.GetProjectById(projectId);
 
             if (project is null)
                 throw new NotFoundException($"There is no such project with id: {projectId}");
 
-            User user =
-                context.Users.SingleOrDefault(u => u.Email.ToLower().Equals(userEmail.ToLower()));
+            User user = userRepository.GetUserByEmail(userEmail);
 
             if (user is null)
                 throw new NotFoundException($"There is no such user with Email: {userEmail}");
 
-            UserProject userProject = context.UserProjects
-                .SingleOrDefault(up => up.ProjectId == project.Id && up.UserId == user.Id);
+            UserProject userProject = userProjectsRepository.GetUserProject(project.Id, user.Id);
 
             if (userProject is null)
                 throw new NotFoundException("This user is not assigned to this project !");
 
-            context.UserProjects.Remove(userProject);
-            context.SaveChanges();
+            userProjectsRepository.DeleteUserProject(userProject);
         }
     }
 }

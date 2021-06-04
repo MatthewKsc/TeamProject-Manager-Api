@@ -20,6 +20,8 @@ namespace TeamProject_Manager_Api.Repositories
         void CreateUser(User user);
         void UpdateUser(User updatedUser);
         void DeleteUser(User user);
+        User GetUserByEmail(string userEmail);
+        List<User> GetUserByEmail(List<string> userEmail);
     }
 
     public class UserRepository : IUserRepository {
@@ -85,6 +87,15 @@ namespace TeamProject_Manager_Api.Repositories
         public void DeleteUser(User user) {
             context.Users.Remove(user);
             context.SaveChanges();
+        }
+
+        public User GetUserByEmail(string userEmail) {
+            return context.Users.SingleOrDefault(u => u.Email.ToLower().Equals(userEmail.ToLower()));
+        }
+
+        public List<User> GetUserByEmail(List<string> userEmail) {
+            return context.Users
+                .Where(u => userEmail.Contains(u.Email)).ToList();
         }
     }
 }
