@@ -26,9 +26,8 @@ namespace TeamProject_Manager_Api.Controllers {
         [HttpGet("company/{companyId}")]
         [SwaggerOperation(Summary = "Retrieves all teams within specified comapny by companyId")]
         public ActionResult GetAll([FromRoute]int companyId) {
-            if (!companyService.ValidCompany(companyId)) {
-                throw new BadRequestException($"There is no company with id {companyId}");
-            }
+
+            companyService.ValidCompany(companyId);
             
             return Ok(service.GetAllTeams(companyId));
         }
@@ -44,9 +43,7 @@ namespace TeamProject_Manager_Api.Controllers {
         [SwaggerOperation(Summary = "Create a new team by specific model and companyId")]
         public ActionResult CreatTeam([FromBody] CreateTeam createTeam, [FromRoute] int companyId) {
 
-            if (!companyService.ValidCompany(companyId)) {
-                throw new BadRequestException($"There is no company with id {companyId}");
-            }
+            companyService.ValidCompany(companyId);
 
             int id = service.CreateTeam(createTeam, companyId);
 

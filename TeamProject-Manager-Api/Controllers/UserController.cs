@@ -17,14 +17,18 @@ namespace TeamProject_Manager_Api.Controllers{
     public class UserController : ControllerBase{
         
         private readonly IUserService service;
+        private readonly ITeamService teamService;
 
-        public UserController(IUserService service) {
+        public UserController(IUserService service, ITeamService teamService) {
             this.service = service;
+            this.teamService = teamService;
         }
 
         [HttpGet("team/{teamId}")]
         [SwaggerOperation(Summary = "Retrieves users by query model and specific team by teamId")]
         public ActionResult GetAll([FromBody] Query<UserDTO> query, [FromRoute] int teamId) {
+
+            teamService.ValidTeam(teamId);
 
             return Ok(service.GetAllUsers(query ,teamId));
         }
@@ -39,6 +43,9 @@ namespace TeamProject_Manager_Api.Controllers{
         [HttpPost("{teamId}")]
         [SwaggerOperation(Summary = "Create a new user by specific model and teamId")]
         public ActionResult CreatUser([FromBody] CreateUser createUser, [FromRoute] int teamId) {
+
+            teamService.ValidTeam(teamId);
+
             int id = service.CreateUser(createUser, teamId);
 
             return Created($"api/users/{id}", null);

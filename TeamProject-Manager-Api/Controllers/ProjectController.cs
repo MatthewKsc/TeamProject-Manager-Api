@@ -28,9 +28,7 @@ namespace TeamProject_Manager_Api.Controllers {
         [SwaggerOperation(Summary = "Retrieves projects by query model and specific team by teamId")]
         public ActionResult GetAll([FromBody]Query<ProjectDTO> query, int teamId) {
 
-            if (!teamService.ValidTeam(teamId)) {
-                throw new BadRequestException($"There is no team with id {teamId}");
-            }
+            teamService.ValidTeam(teamId);
 
             return Ok(service.GetAllProjects(query, teamId));
         }
@@ -45,9 +43,8 @@ namespace TeamProject_Manager_Api.Controllers {
         [HttpPost]
         [SwaggerOperation(Summary = "Create a new project by specific model and teamId")]
         public ActionResult CreateProject([FromBody] CreateProject createProject, [FromRoute] int teamId) {
-            if (!teamService.ValidTeam(teamId)) {
-                throw new BadRequestException($"There is no team with id {teamId}");
-            }
+
+            teamService.ValidTeam(teamId);
 
             int id = service.CreateProject(createProject, teamId);
 

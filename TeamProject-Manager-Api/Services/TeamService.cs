@@ -21,7 +21,7 @@ namespace TeamProject_Manager_Api.Services
         int CreateTeam(CreateTeam createTeam, int companyId);
         void UpdateTeam(CreateTeam updatedTeam, int Id);
         void DeleteTeamById(int Id);
-        bool ValidTeam(int Id);
+        void ValidTeam(int Id);
         string GetCompanyDomain(int Id);
     }
 
@@ -91,9 +91,10 @@ namespace TeamProject_Manager_Api.Services
             teamRepository.DeleteTeamById(team);
         }
 
-        public bool ValidTeam(int Id) {
-            //to implement
-            return teamRepository.ValidTeam(Id);
+        public void ValidTeam(int teamId) {
+            if (!teamRepository.ValidTeam(teamId)) {
+                throw new BadRequestException($"There is no team with id {teamId}");
+            }
         }
 
         public string GetCompanyDomain(int Id) {

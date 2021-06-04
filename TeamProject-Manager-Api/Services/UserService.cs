@@ -39,8 +39,6 @@ namespace TeamProject_Manager_Api.Services
 
         public PageResult<UserDTO> GetAllUsers(Query<UserDTO> query, int teamId) {
 
-            teamService.ValidTeam(teamId);
-
             IQueryable<User> baseResult = userRepository.GetUsersQuery(query, teamId);
 
             if (!string.IsNullOrEmpty(query.SortBy)) {
@@ -82,8 +80,6 @@ namespace TeamProject_Manager_Api.Services
 
         public int CreateUser(CreateUser createUser, int teamId) {
 
-            teamService.ValidTeam(teamId);
-
             User user = mapper.Map<User>(createUser);
 
             string companyDomainEmail = teamService.GetCompanyDomain(teamId);
@@ -98,6 +94,7 @@ namespace TeamProject_Manager_Api.Services
         }
 
         public void UpdateUser(CreateUser updatedUser, int Id) {
+
             User user = userRepository.GetUserByIdWithIncludes(Id);
 
             if (user is null)

@@ -50,6 +50,7 @@ namespace TeamProject_Manager_Api.Services
         }
 
         public void AddUserToProject(List<string> userEmail, int projectId) {
+
             Project project = projectRepository.GetProjectById(projectId);
 
             if (project is null)
@@ -66,6 +67,7 @@ namespace TeamProject_Manager_Api.Services
         }
 
         public void RemoveUserFromProject(string userEmail, int projectId) {
+
             Project project = projectRepository.GetProjectById(projectId);
 
             if (project is null)
