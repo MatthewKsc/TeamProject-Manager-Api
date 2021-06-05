@@ -59,7 +59,7 @@ namespace TeamProject_Manager_Api.Repositories
                 .Include(t => t.OwnerTeam)
                 .Include(p => p.UserProjects)
                     .ThenInclude(up => up.User)
-                .Where(p => query.searchPhrase == null || string.IsNullOrEmpty(query.searchPhrase) ||
+                .Where(p => string.IsNullOrEmpty(query.searchPhrase) || string.IsNullOrWhiteSpace(query.searchPhrase) ||
                     (
                         p.Description.ToLower().Equals(query.searchPhrase.ToLower()) ||
                         p.Title.ToLower().Equals(query.searchPhrase.ToLower())
