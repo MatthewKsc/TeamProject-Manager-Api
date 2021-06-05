@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamProject-Manager-Api", "TeamProject-Manager-Api\TeamProject-Manager-Api.csproj", "{18A885EC-1DB4-4221-9BB6-C27E98F1EC7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamProject-Manager.Test", "TeamProject-Manager.Test\TeamProject-Manager.Test.csproj", "{C0AF6E40-65D0-4CDB-8104-9EA6F8A9041C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamProject-Manager.Test", "TeamProject-Manager.Test\TeamProject-Manager.Test.csproj", "{C0AF6E40-65D0-4CDB-8104-9EA6F8A9041C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1774AF60-EB49-4C0E-8CC6-7D29537D6E8A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

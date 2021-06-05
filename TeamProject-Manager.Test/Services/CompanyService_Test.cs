@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using TeamProject_Manager_Api;
 using TeamProject_Manager_Api.dao.Entitys;
 using TeamProject_Manager_Api.Dtos.Models;
+using TeamProject_Manager_Api.Dtos.Models_Operations;
+using TeamProject_Manager_Api.Exceptions;
 using TeamProject_Manager_Api.Repositories;
 using TeamProject_Manager_Api.Services;
 
@@ -39,6 +41,76 @@ namespace TeamProject_Manager.Test.Services
             Assert.AreEqual(company.Id, result.Id);
             Assert.AreEqual(company.CompanyName, result.CompanyName);
 
+            Assert.Throws<NotFoundException>(() => comapnyService.GetComapnyById(0));
+
+        }
+
+        [Test]
+        public void GetAllComapnies_Test() {
+            var comapnies = getComapnies();
+            companyRepoMock.Setup(x => x.GetAllComapnies()).Returns(comapnies);
+
+            var result = comapnyService.GetAllComapnies();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(comapnies.Count, result.Count);
+        }
+
+        [Test]
+        public void GetAllComapnies_EmptyListThrowException_Test() {
+            companyRepoMock.Setup(x => x.GetAllComapnies()).Returns(new List<Company>());
+
+            Assert.Throws<NotFoundException>(() => comapnyService.GetAllComapnies());
+        }
+
+        [Test]
+        public void CreateCompany_Test(){
+            var createComapny = new CreateCompany();
+            companyRepoMock.Setup(x => x.CreateCompany(It.IsAny<Company>())).Verifiable();
+
+            comapnyService.CreateCompany(createComapny);
+
+            companyRepoMock.VerifyAll();
+            companyRepoMock.Verify(x => x.CreateCompany(It.IsAny<Company>()), Times.Once);
+        }
+
+        [Test]
+        public void UpdateCompany_Test() {
+            var createComapny = new CreateCompany();
+            var company = getComapny();
+            companyRepoMock.Setup(x => x.UpdateComapny(It.IsAny<Company>())).Verifiable();
+            companyRepoMock.Setup(x => x.GetComapnyByIdWithAddress(company.Id))
+                .Returns(company);
+
+            comapnyService.UpdateComapny(createComapny, company.Id);
+
+            companyRepoMock.VerifyAll();
+            companyRepoMock.Verify(x => x.UpdateComapny(It.IsAny<Company>()), Times.Once);
+            Assert.Throws<NotFoundException>(() => comapnyService.UpdateComapny(createComapny, 2));
+        }
+
+        [Test]
+        public void DeleteComapnyById_Test() {
+            var company = getComapny();
+            companyRepoMock.Setup(x => x.DeleteComapny(It.IsAny<Company>())).Verifiable();
+            companyRepoMock.Setup(x => x.GetComapnyById(company.Id))
+                .Returns(company);
+
+            comapnyService.DeleteComapnyById(company.Id);
+
+            companyRepoMock.VerifyAll();
+            companyRepoMock.Verify(x => x.DeleteComapny(It.IsAny<Company>()), Times.Once);
+            Assert.Throws<NotFoundException>(() => comapnyService.DeleteComapnyById(2));
+        }
+
+        [Test]
+        public void ValidCompany_Test() {
+            companyRepoMock.Setup(x => x.ValidComapny(1)).Returns(true);
+
+            comapnyService.ValidCompany(1);
+
+            companyRepoMock.Verify(x => x.ValidComapny(1), Times.Once);
+            Assert.Throws<BadRequestException>(() => comapnyService.ValidCompany(2));
         }
 
         [Ignore("not a test method")]
@@ -47,8 +119,15 @@ namespace TeamProject_Manager.Test.Services
                 Id = 1,
                 CompanyName = "TestCompany",
                 SizeOfComapny = 100,
-                Address = new Address(),
-                Teams = new List<Team>()
+                Address = new Address()
+            };
+        }
+
+        [Ignore("not a test method")]
+        private List<Company> getComapnies() {
+            return new List<Company>(){
+                new Company { Id = 1, CompanyName = "TestCompany", SizeOfComapny = 100, Address = new Address() },
+                new Company { Id = 1, CompanyName = "TestCompany", SizeOfComapny = 100, Address = new Address() }
             };
         }
     }

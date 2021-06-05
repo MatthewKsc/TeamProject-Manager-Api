@@ -1,6 +1,6 @@
 ﻿# TeamProject-Manager-Api
 Project Idea is to create web Api to manage project within a comapny, so team's can handle and manage their projects more easily.
-Project is created in C# and .Net Framework. Testing in this project is via Postman and Swagger UI.
+Project is created in C# and .Net Framework. Project was tested with Unit Test's (NUnit and Moq) and Integration Test's (Postman and Swagger).
 
 
 ## Technologies and Tools
@@ -13,6 +13,8 @@ Project is created in C# and .Net Framework. Testing in this project is via Post
 * FluentValidation
 * SQL Server
 * Swagger
+* Moq
+* NUnit
 
 ##### Tools
 * Visual Studio Code
