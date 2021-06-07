@@ -91,6 +91,17 @@ namespace TeamProject_Manager.Test.Services
             Assert.Throws<NotFoundException>(() => teamSearvice.DeleteTeamById(0));
         }
 
+        [Test]
+        public void ValidTeam_Test() {
+            teamRepoMock.Setup(x => x.ValidTeam(1)).Returns(true);
+
+            teamSearvice.ValidTeam(1);
+
+            teamRepoMock.Verify(x => x.ValidTeam(1), Times.Once);
+            Assert.Throws<BadRequestException>(() => teamSearvice.ValidTeam(2));
+            Assert.DoesNotThrow(() => teamSearvice.ValidTeam(1));
+        }
+
         [Ignore("not a test method")]
         private Team GetTeam() {
             return new Team {

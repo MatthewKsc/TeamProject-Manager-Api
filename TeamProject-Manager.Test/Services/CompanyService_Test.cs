@@ -108,6 +108,7 @@ namespace TeamProject_Manager.Test.Services
 
             companyRepoMock.Verify(x => x.ValidComapny(1), Times.Once);
             Assert.Throws<BadRequestException>(() => comapnyService.ValidCompany(2));
+            Assert.DoesNotThrow(() => comapnyService.ValidCompany(1));
         }
 
         [Ignore("not a test method")]
