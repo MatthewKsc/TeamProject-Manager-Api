@@ -94,6 +94,8 @@ namespace TeamProject_Manager_Api.Services{
 
             if (project is null)
                 throw new NotFoundException($"There is no project with id: {Id}");
+
+            projectRepository.DeleteProject(project);
         }
     }
 }
