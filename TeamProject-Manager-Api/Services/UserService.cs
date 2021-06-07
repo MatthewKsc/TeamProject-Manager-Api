@@ -57,7 +57,7 @@ namespace TeamProject_Manager_Api.Services
 
             List<User> users = userRepository.GetUsersWithQuery(query, baseResult);
 
-            int totalItemCount = baseResult.Count();
+            int totalItemCount = users.Count();
 
             var DTOs = mapper.Map<List<UserDTO>>(users);
 
