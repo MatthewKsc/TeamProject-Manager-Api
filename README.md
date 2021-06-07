@@ -17,7 +17,7 @@ Project is created in C# and .Net Framework. Project was tested with Unit Test's
 * NUnit
 
 ##### Tools
-* Visual Studio Code
+* Visual Studio
 * MS for SQL Server
 * Postman
 * Swagger UI
@@ -30,6 +30,7 @@ Project is created in C# and .Net Framework. Project was tested with Unit Test's
 * `\TeamProject-Manager-Api\Installer` -> Folder in witch we register some of services in API container for example ComapnyService.cs
 * `\TeamProject-Manager-Api\Migrations` -> Migrations created with Entity Framework Core
 * `\TeamProject-Manager-Api\Services` -> Buissnes logic layout to perform action on database
+* `\TeamProject-Manager.Test\Services\` -> Unit test's of Service Layout
 
 ## SQL Server Diagram
 ![Alt text](TeamProject-Manager-Api/markdown/images/MSSQL.png "sqlServer")

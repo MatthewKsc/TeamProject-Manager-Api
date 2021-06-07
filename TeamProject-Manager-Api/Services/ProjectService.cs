@@ -20,7 +20,7 @@ namespace TeamProject_Manager_Api.Services{
         ProjectDTO GetProjectById(int Id);
         int CreateProject(CreateProject project, int teamId);
         void UpdateProject(CreateProject updatedProject, int Id);
-        void DeleteProject(int Id);
+        void DeleteProjectById(int Id);
     }
 
     public class ProjectService : IProjectService{
@@ -88,12 +88,14 @@ namespace TeamProject_Manager_Api.Services{
             projectRepository.UpdateProject(project);
         }
 
-        public void DeleteProject(int Id) {
+        public void DeleteProjectById(int Id) {
 
             Project project = projectRepository.GetProjectById(Id);
 
             if (project is null)
                 throw new NotFoundException($"There is no project with id: {Id}");
+
+            projectRepository.DeleteProject(project);
         }
     }
 }

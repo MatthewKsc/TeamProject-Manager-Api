@@ -15,7 +15,7 @@ namespace TeamProject_Manager_Api.Repositories
         Team GetTeamByIdWithTeamMembers(int Id);
         void CreateTeam(Team team);
         void UpdateTeam(Team team);
-        void DeleteTeamById(Team team);
+        void DeleteTeam(Team team);
         bool ValidTeam(int Id);
         string GetCompanyDomain(int Id);
 
@@ -57,7 +57,7 @@ namespace TeamProject_Manager_Api.Repositories
             context.SaveChanges();
         }
 
-        public void DeleteTeamById(Team team) {
+        public void DeleteTeam(Team team) {
             context.Teams.Remove(team);
             context.SaveChanges();
         }

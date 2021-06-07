@@ -62,7 +62,7 @@ namespace TeamProject_Manager_Api.Controllers {
         [HttpDelete("{Id}")]
         [SwaggerOperation(Summary = "Delete specific project from api by provided Id and teamId ")]
         public ActionResult DeleteById([FromRoute] int Id) {
-            service.DeleteProject(Id);
+            service.DeleteProjectById(Id);
 
             return NoContent();
         }

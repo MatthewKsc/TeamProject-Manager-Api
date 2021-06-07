@@ -70,7 +70,6 @@ namespace TeamProject_Manager.Test.Services
 
             comapnyService.CreateCompany(createComapny);
 
-            companyRepoMock.VerifyAll();
             companyRepoMock.Verify(x => x.CreateCompany(It.IsAny<Company>()), Times.Once);
         }
 
@@ -84,7 +83,6 @@ namespace TeamProject_Manager.Test.Services
 
             comapnyService.UpdateComapny(createComapny, company.Id);
 
-            companyRepoMock.VerifyAll();
             companyRepoMock.Verify(x => x.UpdateComapny(It.IsAny<Company>()), Times.Once);
             Assert.Throws<NotFoundException>(() => comapnyService.UpdateComapny(createComapny, 2));
         }
@@ -98,7 +96,6 @@ namespace TeamProject_Manager.Test.Services
 
             comapnyService.DeleteComapnyById(company.Id);
 
-            companyRepoMock.VerifyAll();
             companyRepoMock.Verify(x => x.DeleteComapny(It.IsAny<Company>()), Times.Once);
             Assert.Throws<NotFoundException>(() => comapnyService.DeleteComapnyById(2));
         }
@@ -111,6 +108,7 @@ namespace TeamProject_Manager.Test.Services
 
             companyRepoMock.Verify(x => x.ValidComapny(1), Times.Once);
             Assert.Throws<BadRequestException>(() => comapnyService.ValidCompany(2));
+            Assert.DoesNotThrow(() => comapnyService.ValidCompany(1));
         }
 
         [Ignore("not a test method")]
@@ -125,9 +123,10 @@ namespace TeamProject_Manager.Test.Services
 
         [Ignore("not a test method")]
         private List<Company> getComapnies() {
+            Address address = new Address();
             return new List<Company>(){
-                new Company { Id = 1, CompanyName = "TestCompany", SizeOfComapny = 100, Address = new Address() },
-                new Company { Id = 1, CompanyName = "TestCompany", SizeOfComapny = 100, Address = new Address() }
+                new Company { Id = 1, CompanyName = "TestCompany", SizeOfComapny = 100, Address = address },
+                new Company { Id = 2, CompanyName = "TestCompany", SizeOfComapny = 100, Address = address }
             };
         }
     }

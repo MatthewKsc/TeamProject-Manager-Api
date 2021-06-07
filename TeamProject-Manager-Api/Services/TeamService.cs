@@ -88,7 +88,7 @@ namespace TeamProject_Manager_Api.Services
             if (team is null)
                 throw new NotFoundException($"There is no team with id: {Id}");
 
-            teamRepository.DeleteTeamById(team);
+            teamRepository.DeleteTeam(team);
         }
 
         public void ValidTeam(int teamId) {
