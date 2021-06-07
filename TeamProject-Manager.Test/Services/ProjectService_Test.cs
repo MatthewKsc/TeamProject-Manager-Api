@@ -87,15 +87,15 @@ namespace TeamProject_Manager.Test.Services
 
 
         [Test]
-        public void DeleteProject() {
+        public void DeleteProjectById_Test() {
             var project = GetProject();
             projectRepoMock.Setup(x => x.DeleteProject(It.IsAny<Project>())).Verifiable();
             projectRepoMock.Setup(x => x.GetProjectById(project.Id)).Returns(project);
 
-            projectService.DeleteProject(project.Id);
+            projectService.DeleteProjectById(project.Id);
 
             projectRepoMock.Verify(x => x.DeleteProject(It.IsAny<Project>()), Times.Once);
-            Assert.Throws<NotFoundException>(() => projectService.DeleteProject(0));
+            Assert.Throws<NotFoundException>(() => projectService.DeleteProjectById(0));
         }
 
         [Ignore("not a test method")]
@@ -111,18 +111,20 @@ namespace TeamProject_Manager.Test.Services
 
         [Ignore("not a test method")]
         private List<Project> GetProjects() {
+            Team team = new Team { NameOfTeam = "test name" };
+            List<UserProject> userProjects = new List<UserProject>();
             return new List<Project>(){
                 new Project { Id = 1,  
                     Title = "TestProject", 
                     Description = "Test description", 
-                    OwnerTeam = new Team { NameOfTeam = "test name" },
-                    UserProjects = new List<UserProject>() },
+                    OwnerTeam = team,
+                    UserProjects = userProjects },
 
                 new Project { Id = 2,
                     Title = "TestProject2",
                     Description = "Test description2",
-                    OwnerTeam = new Team { NameOfTeam = "test name" },
-                    UserProjects = new List<UserProject>() }
+                    OwnerTeam = team,
+                    UserProjects = userProjects }
             };
         }
 

@@ -122,9 +122,10 @@ namespace TeamProject_Manager.Test.Services
 
         [Ignore("not a test method")]
         private List<Company> getComapnies() {
+            Address address = new Address();
             return new List<Company>(){
-                new Company { Id = 1, CompanyName = "TestCompany", SizeOfComapny = 100, Address = new Address() },
-                new Company { Id = 2, CompanyName = "TestCompany", SizeOfComapny = 100, Address = new Address() }
+                new Company { Id = 1, CompanyName = "TestCompany", SizeOfComapny = 100, Address = address },
+                new Company { Id = 2, CompanyName = "TestCompany", SizeOfComapny = 100, Address = address }
             };
         }
     }
